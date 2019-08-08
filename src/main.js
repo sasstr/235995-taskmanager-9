@@ -4,7 +4,7 @@ const CARD_COUNT = 3;
 
 /**
  * Функция возращает html разметку пунктов меню.
- * @return string
+ * @return {string}
  */
 const getMenu = () => {
   return `
@@ -39,7 +39,7 @@ const getMenu = () => {
 
 /**
  * Функция возращает html разметку поиска.
- * @return string
+ * @return {string}
  */
 const getSearch = () => {
   return `<section class="main__search search container">
@@ -51,11 +51,11 @@ const getSearch = () => {
   />
   <label class="visually-hidden" for="search__input">Search</label>
   </section>`;
-  };
+};
 
 /**
  * Функция возращает html разметку фильтра.
- * @return string
+ * @return {string}
  */
 const getMainFilter = () => {
   return `<section class="main__filter filter container">
@@ -130,7 +130,7 @@ const getMainFilter = () => {
 
 /**
  * Функция возращает html разметку сортировки.
- * @return string
+ * @return {string}
  */
 const getFilterList = () => {
   return `
@@ -143,7 +143,7 @@ const getFilterList = () => {
 
 /**
  * Функция возращает html разметку контейнера для board.
- * @return string
+ * @return {string}
  */
 const getBoardContainer = () => {
   return `<section class="board container">
@@ -152,7 +152,7 @@ const getBoardContainer = () => {
 
 /**
  * Функция возращает html разметку контейнера для board__tasks.
- * @return string
+ * @return {string}
  */
 const getBoardTasks = () => {
   return `<div class="board__tasks"></div>`;
@@ -161,7 +161,7 @@ const getBoardTasks = () => {
 
 /**
  * Функция возращает html разметку карточки.
- * @return string
+ * @return {string}
  */
 const getCard = () => {
   return `<article class="card card--black">
@@ -233,7 +233,7 @@ const getCard = () => {
 
 /**
  * Функция возращает html разметку карточки в состоянии редоктирования.
- * @return string
+ * @return {string}
  */
 const getCardEditForm = () => {
   return `<article class="card card--edit card--yellow card--repeat">
@@ -507,7 +507,7 @@ const getCardEditForm = () => {
 
 /**
  * Функция возращает html разметку кнопки загрузить еще.
- * @return string
+ * @return {string}
  */
 const getButtonLoadMore = () => {
   return `<button class="load-more" type="button">load more</button>`;
@@ -515,27 +515,27 @@ const getButtonLoadMore = () => {
 
 /**
  * Функция рендерит разметку.
- * @param node container элемент в который добавляется разметка из markup.
- * @param string markup разметка которая добавляется в container.
- * @return void
+ * @param {node} container элемент в который добавляется разметка из markup.
+ * @param {string} markup разметка которая добавляется в container.
+ * @return {void}
  */
 const renderComponent = (container, markup) => {
-  container.insertAdjacentHTML('beforeend', markup);
+  container.insertAdjacentHTML(`beforeend`, markup);
 };
 
-const mainControl = document.querySelector('.main__control');
+const mainControl = document.querySelector(`.main__control`);
 renderComponent(mainControl, getMenu());
 
-const main = document.querySelector('.main');
+const main = document.querySelector(`.main`);
 renderComponent(main, getSearch());
 renderComponent(main, getMainFilter());
 renderComponent(main, getBoardContainer());
 
-const board = document.querySelector('.board');
+const board = document.querySelector(`.board`);
 renderComponent(board, getFilterList());
 renderComponent(board, getBoardTasks());
 
-const boardTasks = document.querySelector('.board__tasks');
+const boardTasks = document.querySelector(`.board__tasks`);
 renderComponent(boardTasks, getCardEditForm());
 
 for (let i = 0; i < CARD_COUNT; i++) {
