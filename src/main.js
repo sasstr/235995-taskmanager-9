@@ -142,24 +142,6 @@ const getFilterList = () => {
 };
 
 /**
- * Функция возращает html разметку контейнера для board.
- * @return {string}
- */
-const getBoardContainer = () => {
-  return `<section class="board container">
-  </section>`;
-};
-
-/**
- * Функция возращает html разметку контейнера для board__tasks.
- * @return {string}
- */
-const getBoardTasks = () => {
-  return `<div class="board__tasks"></div>`;
-};
-
-
-/**
  * Функция возращает html разметку карточки.
  * @return {string}
  */
@@ -513,33 +495,40 @@ const getButtonLoadMore = () => {
   return `<button class="load-more" type="button">load more</button>`;
 };
 
+const getCardTasks = (cardCount) => {
+  for (let i = 0; i < cardCount; i++) {
+    return getCard();
+  }
+};
+
+/**
+ * Функция возращает html разметку контейнера для board.
+ * @return {string}
+ */
+const getBoardContainer = () => {
+  return `<section class="board container">
+    <div class="board__tasks">
+      ${getCardEditForm()}
+      ${getCardTasks(CARD_COUNT)}
+    </div>
+    ${getButtonLoadMore()}
+  </section>`;
+};
+
 /**
  * Функция рендерит разметку.
- * @param {node} container элемент в который добавляется разметка из markup.
- * @param {string} markup разметка которая добавляется в container.
+ * @param {node} container элемент в который добавляется разметка из cb.
+ * @param {string} markup функция которая возращает разметку, которая добавляется в container.
  * @return {void}
  */
 const renderComponent = (container, markup) => {
   container.insertAdjacentHTML(`beforeend`, markup);
 };
 
-const mainControl = document.querySelector(`.main__control`);
-renderComponent(mainControl, getMenu());
-
 const main = document.querySelector(`.main`);
+const mainControl = main.querySelector(`.main__control`);
+
+renderComponent(mainControl, getMenu());
 renderComponent(main, getSearch());
 renderComponent(main, getMainFilter());
 renderComponent(main, getBoardContainer());
-
-const board = document.querySelector(`.board`);
-renderComponent(board, getFilterList());
-renderComponent(board, getBoardTasks());
-
-const boardTasks = document.querySelector(`.board__tasks`);
-renderComponent(boardTasks, getCardEditForm());
-
-for (let i = 0; i < CARD_COUNT; i++) {
-  renderComponent(boardTasks, getCard());
-}
-renderComponent(board, getButtonLoadMore());
-
