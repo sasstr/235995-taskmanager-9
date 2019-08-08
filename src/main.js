@@ -1,6 +1,6 @@
 /**
  * Функция возращает html разметку пунктов меню.
- * @return {string}
+ * @return string
  */
 const getMenu = () => {
 return `
@@ -35,7 +35,7 @@ return `
 
 /**
  * Функция возращает html разметку поиска.
- * @return {string}
+ * @return string
  */
 const getSearch = () => {
 return `<section class="main__search search container">
@@ -51,7 +51,7 @@ return `<section class="main__search search container">
 
 /**
  * Функция возращает html разметку фильтра.
- * @return {string}
+ * @return string
  */
 const getMainFilter = () => {
   return `<section class="main__filter filter container">
@@ -126,7 +126,7 @@ const getMainFilter = () => {
 
 /**
  * Функция возращает html разметку сортировки.
- * @return {string}
+ * @return string
  */
 const getFilterList = () => {
   return `
@@ -134,30 +134,30 @@ const getFilterList = () => {
   <a href="#" class="board__filter">SORT BY DEFAULT</a>
   <a href="#" class="board__filter">SORT BY DATE up</a>
   <a href="#" class="board__filter">SORT BY DATE down</a>
-</div>`
+</div>`;
 };
 
 /**
  * Функция возращает html разметку контейнера для board.
- * @return {string}
+ * @return string
  */
 const getBoardContainer = () => {
   return `<section class="board container">
-  </section>`
+  </section>`;
 };
 
 /**
  * Функция возращает html разметку контейнера для board__tasks.
- * @return {string}
+ * @return string
  */
 const getBoardTasks = () => {
-  return `<div class="board__tasks"></div>`
+  return `<div class="board__tasks"></div>`;
 };
 
 
 /**
  * Функция возращает html разметку карточки.
- * @return {string}
+ * @return string
  */
 const getCard = () => {
   return `<article class="card card--black">
@@ -229,7 +229,7 @@ const getCard = () => {
 
 /**
  * Функция возращает html разметку карточки в состоянии редоктирования.
- * @return {string}
+ * @return string
  */
 const getCardEditForm = () => {
   return `<article class="card card--edit card--yellow card--repeat">
@@ -503,7 +503,7 @@ const getCardEditForm = () => {
 
 /**
  * Функция возращает html разметку кнопки загрузить еще.
- * @return {string}
+ * @return string
  */
 const getButtonLoadMore = () => {
   return `<button class="load-more" type="button">load more</button>`;
@@ -511,8 +511,8 @@ const getButtonLoadMore = () => {
 
 /**
  * Функция рендерит разметку.
- * @param {node} container элемент в который добавляется разметка из markup.
- * @param {string} markup разметка которая добавляется в container.
+ * @param node container элемент в который добавляется разметка из markup.
+ * @param string markup разметка которая добавляется в container.
  * @return void
  */
 const renderComponent = (container, markup) => {
