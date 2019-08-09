@@ -1,4 +1,4 @@
-# Личный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
+# Учебный проект «Менеджер задач» [![Build status][travis-image]][travis-url]
 
 * Студент: [Alexander Strakhovenko](https://up.htmlacademy.ru/ecmascript/9/user/235995).
 * Наставник: [Владимир Коршунов](https://htmlacademy.ru/profile/bekobou).
