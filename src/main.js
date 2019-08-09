@@ -501,8 +501,7 @@ const getButtonLoadMore = () => {
  * @return {string}
  */
 const getCardTasks = (cardCount) => {
-  const tasks = new Array(cardCount).fill().map(getCard);
-  return tasks.join(``);
+  return  new Array(cardCount).fill().map(getCard).join(``);
 };
 
 /**
