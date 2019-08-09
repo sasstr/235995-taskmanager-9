@@ -495,10 +495,14 @@ const getButtonLoadMore = () => {
   return `<button class="load-more" type="button">load more</button>`;
 };
 
+/**
+ * Функция возращает разметку карточек задач.
+ * @param {number} cardCount колличество карточек задач.
+ * @return {string}
+ */
 const getCardTasks = (cardCount) => {
-  for (let i = 0; i < cardCount; i++) {
-    return getCard();
-  }
+  const tasks = new Array(cardCount).fill().map(getCard);
+  return tasks.join(``);
 };
 
 /**
