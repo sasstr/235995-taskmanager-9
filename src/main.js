@@ -6,8 +6,7 @@ const CARD_COUNT = 3;
  * Функция возращает html разметку пунктов меню.
  * @return {string}
  */
-const getMenu = () => {
-  return `
+const getMenu = () => `
   <section class="control__btn-wrap">
     <input
       type="radio"
@@ -35,14 +34,14 @@ const getMenu = () => {
     <label for="control__statistic" class="control__label"
       >STATISTICS</label>
   </section>`;
-};
+
 
 /**
  * Функция возращает html разметку поиска.
  * @return {string}
  */
-const getSearch = () => {
-  return `<section class="main__search search container">
+const getSearch = () =>
+  `<section class="main__search search container">
   <input
     type="text"
     id="search__input"
@@ -51,14 +50,13 @@ const getSearch = () => {
   />
   <label class="visually-hidden" for="search__input">Search</label>
   </section>`;
-};
 
 /**
  * Функция возращает html разметку фильтра.
  * @return {string}
  */
-const getMainFilter = () => {
-  return `<section class="main__filter filter container">
+const getMainFilter = () =>
+  `<section class="main__filter filter container">
   <input
   type="radio"
   id="filter__all"
@@ -126,27 +124,26 @@ const getMainFilter = () => {
   >Archive <span class="filter__archive-count">115</span></label
 >
 </section>`;
-};
+
 
 /**
  * Функция возращает html разметку сортировки.
  * @return {string}
  */
-const getFilterList = () => {
-  return `
+const getFilterList = () =>
+`
   <div class="board__filter-list">
   <a href="#" class="board__filter">SORT BY DEFAULT</a>
   <a href="#" class="board__filter">SORT BY DATE up</a>
   <a href="#" class="board__filter">SORT BY DATE down</a>
 </div>`;
-};
 
 /**
  * Функция возращает html разметку карточки.
  * @return {string}
  */
-const getCard = () => {
-  return `<article class="card card--black">
+const getCard = () =>
+`<article class="card card--black">
   <div class="card__form">
     <div class="card__inner">
       <div class="card__control">
@@ -211,14 +208,13 @@ const getCard = () => {
     </div>
   </div>
 </article>`;
-};
 
 /**
  * Функция возращает html разметку карточки в состоянии редоктирования.
  * @return {string}
  */
-const getCardEditForm = () => {
-  return `<article class="card card--edit card--yellow card--repeat">
+const getCardEditForm = () =>
+`<article class="card card--edit card--yellow card--repeat">
   <form class="card__form" method="get">
     <div class="card__inner">
       <div class="card__control">
@@ -485,31 +481,26 @@ const getCardEditForm = () => {
     </div>
   </form>
 </article>`;
-};
 
 /**
  * Функция возращает html разметку кнопки загрузить еще.
  * @return {string}
  */
-const getButtonLoadMore = () => {
-  return `<button class="load-more" type="button">load more</button>`;
-};
+const getButtonLoadMore = () => `<button class="load-more" type="button">load more</button>`;
 
 /**
  * Функция возращает разметку карточек задач.
  * @param {number} cardCount колличество карточек задач.
  * @return {string}
  */
-const getCardTasks = (cardCount) => {
-  return  new Array(cardCount).fill().map(getCard).join(``);
-};
+const getCardTasks = (cardCount) => new Array(cardCount).fill().map(getCard).join(``);
 
 /**
  * Функция возращает html разметку контейнера для board.
  * @return {string}
  */
-const getBoardContainer = () => {
-  return `<section class="board container">
+const getBoardContainer = () =>
+`<section class="board container">
     ${getFilterList()}
     <div class="board__tasks">
       ${getCardEditForm()}
@@ -517,7 +508,6 @@ const getBoardContainer = () => {
     </div>
     ${getButtonLoadMore()}
   </section>`;
-};
 
 /**
  * Функция рендерит разметку.
@@ -525,9 +515,7 @@ const getBoardContainer = () => {
  * @param {string} markup функция которая возращает разметку, которая добавляется в container.
  * @return {void}
  */
-const renderComponent = (container, markup) => {
-  container.insertAdjacentHTML(`beforeend`, markup);
-};
+const renderComponent = (container, markup) => container.insertAdjacentHTML(`beforeend`, markup);
 
 const main = document.querySelector(`.main`);
 const mainControl = main.querySelector(`.main__control`);
