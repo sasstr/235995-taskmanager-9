@@ -130,20 +130,19 @@ const getMainFilter = () =>
  * Функция возращает html разметку сортировки.
  * @return {string}
  */
-const getFilterList = () =>
-`
-  <div class="board__filter-list">
-  <a href="#" class="board__filter">SORT BY DEFAULT</a>
-  <a href="#" class="board__filter">SORT BY DATE up</a>
-  <a href="#" class="board__filter">SORT BY DATE down</a>
-</div>`;
+const getFilterList = () => 
+  `<div class="board__filter-list">
+    <a href="#" class="board__filter">SORT BY DEFAULT</a>
+    <a href="#" class="board__filter">SORT BY DATE up</a>
+    <a href="#" class="board__filter">SORT BY DATE down</a>
+  </div>`;
 
 /**
  * Функция возращает html разметку карточки.
  * @return {string}
  */
 const getCard = () =>
-`<article class="card card--black">
+  `<article class="card card--black">
   <div class="card__form">
     <div class="card__inner">
       <div class="card__control">
@@ -214,7 +213,7 @@ const getCard = () =>
  * @return {string}
  */
 const getCardEditForm = () =>
-`<article class="card card--edit card--yellow card--repeat">
+  `<article class="card card--edit card--yellow card--repeat">
   <form class="card__form" method="get">
     <div class="card__inner">
       <div class="card__control">
@@ -500,7 +499,7 @@ const getCardTasks = (cardCount) => new Array(cardCount).fill().map(getCard).joi
  * @return {string}
  */
 const getBoardContainer = () =>
-`<section class="board container">
+  `<section class="board container">
     ${getFilterList()}
     <div class="board__tasks">
       ${getCardEditForm()}
