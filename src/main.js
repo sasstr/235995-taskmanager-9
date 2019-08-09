@@ -511,6 +511,7 @@ const getCardTasks = (cardCount) => {
  */
 const getBoardContainer = () => {
   return `<section class="board container">
+    ${getFilterList()}
     <div class="board__tasks">
       ${getCardEditForm()}
       ${getCardTasks(CARD_COUNT)}
