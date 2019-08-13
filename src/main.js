@@ -26,7 +26,7 @@ const getBoardContainer = () =>
       ${getCardTasks(CARD_COUNT)}
     </div>
     ${getButtonLoadMore()}
-  </section>`;
+  </section>`.trim();
 
 /**
  * Функция рендерит разметку.

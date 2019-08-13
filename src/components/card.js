@@ -1,3 +1,40 @@
+const task = {
+  description: [
+    `Do somthing intresting.`,
+    `Go to the Cinema`,
+    `Eat yami steak`,
+    `Go to bed`,
+    `Coding homework`,
+  ][Math.random() * 5],
+  dueDate: Date.now + 1 + Math.floor(Math.random() * 7) * 24 * 3600 * 1000,
+  tags: new Set([
+    `todo`,
+    `personal`,
+    `important`,
+    `cinema`,
+    `repeat`,
+    `entertaiment`,
+    `never`,
+  ]),
+  repeatingDays: {
+    'mo': false,
+    'to': Boolean(Math.round(Math.random())),
+    'we': false,
+    'th': false,
+    'fr': true,
+    'sa': false,
+    'su': false,
+  },
+  color: [
+    `black`,
+    `blue`,
+    `yellow`,
+    `green`,
+    `pink`,
+    `red`,
+  ],
+};
+
 /**
  * Функция возращает html разметку карточки.
  * @return {string}
@@ -67,6 +104,6 @@ const getCard = () =>
       </div>
     </div>
   </div>
-</article>`;
+</article>`.trim();
 
 export {getCard};

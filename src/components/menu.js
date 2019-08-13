@@ -29,6 +29,6 @@ const getMenu = () => `
     />
     <label for="control__statistic" class="control__label"
       >STATISTICS</label>
-  </section>`;
+  </section>`.trim();
 
 export {getMenu};

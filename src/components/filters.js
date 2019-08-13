@@ -70,7 +70,7 @@ const getMainFilter = () =>
 <label for="filter__archive" class="filter__label"
   >Archive <span class="filter__archive-count">115</span></label
 >
-</section>`;
+</section>`.trim();
 
 
 /**
@@ -82,7 +82,7 @@ const getFilterList = () =>
     <a href="#" class="board__filter">SORT BY DEFAULT</a>
     <a href="#" class="board__filter">SORT BY DATE up</a>
     <a href="#" class="board__filter">SORT BY DATE down</a>
-  </div>`;
+  </div>`.trim();
 
 export {getMainFilter};
 export {getFilterList};

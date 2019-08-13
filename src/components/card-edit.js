@@ -269,6 +269,6 @@ const getCardEditForm = () =>
       </div>
     </div>
   </form>
-</article>`;
+</article>`.trim();
 
 export {getCardEditForm};
