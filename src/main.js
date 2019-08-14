@@ -2,6 +2,7 @@ import {getMenu} from './components/menu';
 import {getSearch} from './components/search';
 import {getMainFilter} from './components/filters';
 import {getFilterList} from './components/filters';
+import {getCardData} from './components/card-data';
 import {getCard} from './components/card';
 import {getCardEditForm} from './components/card-edit';
 import {getButtonLoadMore} from './components/button';
@@ -10,9 +11,10 @@ const CARD_COUNT = 3;
 /**
  * Функция возращает разметку карточек задач.
  * @param {number} cardCount колличество карточек задач.
+ * @param {object} taskData моковые данные для карточки задачи.map(getCard())
  * @return {string}
  */
-const getCardTasks = (cardCount) => new Array(cardCount).fill().map(getCard).join(``);
+const getCardTasks = (cardCount, taskData) => new Array(cardCount).fill(getCard(taskData())).join(``);
 
 /**
  * Функция возращает html разметку контейнера для board.
@@ -23,7 +25,7 @@ const getBoardContainer = () =>
     ${getFilterList()}
     <div class="board__tasks">
       ${getCardEditForm()}
-      ${getCardTasks(CARD_COUNT)}
+      ${getCardTasks(CARD_COUNT, getCardData)}
     </div>
     ${getButtonLoadMore()}
   </section>`.trim();
