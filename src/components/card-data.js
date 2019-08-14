@@ -34,8 +34,12 @@ const getCardData = () => ({
     `green`,
     `pink`,
   ][Math.floor(Math.random() * 5)],
-  isFavorite: true,
-  isArchive: false,
+  get isFavorite() {
+    return Math.round(Math.random()) > 0.5 ? true : false;
+  },
+  get isArchive() {
+    return Date.now() > this.dueDate ? true : false;
+  },
 });
 
 export {getCardData};
