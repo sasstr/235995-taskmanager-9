@@ -14,7 +14,7 @@ const CARD_COUNT = 3;
  * @param {object} taskData моковые данные для карточки задачи.map(getCard())
  * @return {string}
  */
-const getCardTasks = (cardCount, taskData) => new Array(cardCount).fill(getCard(taskData())).join(``);
+const getCardTasks = (cardCount, taskData) => new Array(cardCount).fill(``).map(taskData).map(getCard).join(``);
 
 /**
  * Функция возращает html разметку контейнера для board.
