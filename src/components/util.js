@@ -1,11 +1,14 @@
+const MIN_TAGS_AMOUNT = 0;
+const MAX_TAGS_AMOUNT = 3;
+
 //  Функция возращает случайное целое число между min и max - включительно
 const getRandomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
-//  Функция возращает случайной длины массив от исходного массива
-const getRandomLengthArray = (array) => {
-  return array.slice(0, getRandomInteger(1, array.length));
+//  Функция возращает массив тегов длины от 0 до 3 исходного массива
+const getTagsArray = (array) => {
+  return array.slice(MIN_TAGS_AMOUNT, getRandomInteger(MIN_TAGS_AMOUNT, MAX_TAGS_AMOUNT));
 };
 
 //  Функция перемешивает элементы массива
@@ -22,5 +25,5 @@ const shuffleElemetsOfArray = (array) => {
   return cloneArray;
 };
 
-export {getRandomLengthArray};
+export {getTagsArray};
 export {shuffleElemetsOfArray};

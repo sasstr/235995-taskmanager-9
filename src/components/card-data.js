@@ -1,10 +1,21 @@
+import {getTagsArray} from './util';
+import {shuffleElemetsOfArray} from './util';
+
+const Unit = {
+  week: 7,
+  day: 24,
+  hour: 60,
+  minute: 60,
+  second: 1000
+};
+
 const getCardData = () => ({
   description: [
     `Изучить теорию`,
     `Сделать домашку`,
     `Пройти интенсив на соточку`,
   ][Math.floor(Math.random() * 3)],
-  dueDate: Date.now() + 1 + Math.floor(Math.random() * 7) * 24 * 3600 * 1000,
+  dueDate: Date.now() + 1 + Math.floor(Math.random() * Unit.week) * Unit.day * Unit.hour * Unit.minute * Unit.second,
   tags: new Set([
     `homework`,
     `theory`,
@@ -18,6 +29,9 @@ const getCardData = () => ({
     `repeat`,
     `entertaiment`,
   ]),
+  get tagsList() {
+    return getTagsArray(shuffleElemetsOfArray([...this.tags]));
+  },
   repeatingDays: {
     'mo': false,
     'to': Boolean(Math.round(Math.random())),
