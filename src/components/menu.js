@@ -2,7 +2,7 @@
  * Функция возращает html разметку пунктов меню.
  * @return {string}
  */
-const getMenu = () => `
+const makeMenuTemplate = () => `
   <section class="control__btn-wrap">
     <input
       type="radio"
@@ -31,4 +31,4 @@ const getMenu = () => `
       >STATISTICS</label>
   </section>`.trim();
 
-export {getMenu};
+export {makeMenuTemplate};

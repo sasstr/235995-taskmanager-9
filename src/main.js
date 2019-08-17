@@ -1,11 +1,11 @@
-import {getMenu} from './components/menu';
-import {getSearch} from './components/search';
-import {getMainFilter} from './components/filters';
-import {getFilterList} from './components/filters';
 import {getCardData} from './components/card-data';
-import {getCard} from './components/card';
-import {getCardEditForm} from './components/card-edit';
-import {getButtonLoadMore} from './components/button';
+import {makeMenuTemplate} from './components/menu';
+import {makeSearchTemplate} from './components/search';
+import {makeFilterTemplate} from './components/filters';
+import {makeSortTemplate} from './components/sort';
+import {makeTaskTemplate} from './components/card';
+import {makeTaskEditTemplate} from './components/card-edit';
+import {makeLoadMoreButtonTemplate} from './components/button';
 
 const CARD_COUNT = 3;
 /**
@@ -14,24 +14,24 @@ const CARD_COUNT = 3;
  * @param {object} taskData моковые данные для карточки задачи.map(getCard())
  * @return {string}
  */
-const getCardTasks = (cardCount, taskData) => new Array(cardCount)
+const createTasksMok = (cardCount, taskData) => new Array(cardCount)
                                                         .fill(``)
                                                         .map(taskData)
-                                                        .map(getCard)
+                                                        .map(makeTaskTemplate)
                                                         .join(``);
 
 /**
  * Функция возращает html разметку контейнера для board.
  * @return {string}
  */
-const getBoardContainer = () =>
+const compileBoardTemplate = () =>
   `<section class="board container">
-    ${getFilterList()}
+    ${makeSortTemplate()}
     <div class="board__tasks">
-      ${getCardEditForm()}
-      ${getCardTasks(CARD_COUNT, getCardData)}
+      ${makeTaskEditTemplate()}
+      ${createTasksMok(CARD_COUNT, getCardData)}
     </div>
-    ${getButtonLoadMore()}
+    ${makeLoadMoreButtonTemplate()}
   </section>`.trim();
 
 /**
@@ -40,12 +40,12 @@ const getBoardContainer = () =>
  * @param {string} markup функция которая возращает разметку, которая добавляется в container.
  * @return {void}
  */
-const renderComponent = (container, markup) => container.insertAdjacentHTML(`beforeend`, markup);
+const renderTemplate = (container, markup) => container.insertAdjacentHTML(`beforeend`, markup);
 
 const main = document.querySelector(`.main`);
 const mainControl = main.querySelector(`.main__control`);
 
-renderComponent(mainControl, getMenu());
-renderComponent(main, getSearch());
-renderComponent(main, getMainFilter());
-renderComponent(main, getBoardContainer());
+renderTemplate(mainControl, makeMenuTemplate());
+renderTemplate(main, makeSearchTemplate());
+renderTemplate(main, makeFilterTemplate());
+renderTemplate(main, compileBoardTemplate());

@@ -2,7 +2,7 @@
  * Функция возращает html разметку карточки.
  * @return {string}
  */
-const getCard = ({description, dueDate, tagsList, repeatingDays, color}) => `<article class="card card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
+const makeTaskTemplate = ({description, dueDate, tagsList, repeatingDays, color}) => `<article class="card card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
   <div class="card__form">
     <div class="card__inner">
       <div class="card__control">
@@ -55,4 +55,4 @@ const getCard = ({description, dueDate, tagsList, repeatingDays, color}) => `<ar
   </div>
 </article>`.trim();
 
-export {getCard};
+export {makeTaskTemplate};

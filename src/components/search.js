@@ -2,7 +2,7 @@
  * Функция возращает html разметку поиска.
  * @return {string}
  */
-const getSearch = () =>
+const makeSearchTemplate = () =>
   `<section class="main__search search container">
   <input
     type="text"
@@ -13,4 +13,4 @@ const getSearch = () =>
   <label class="visually-hidden" for="search__input">Search</label>
   </section>`.trim();
 
-export {getSearch};
+export {makeSearchTemplate};

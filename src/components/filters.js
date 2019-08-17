@@ -2,7 +2,7 @@
  * Функция возращает html разметку фильтра.
  * @return {string}
  */
-const getMainFilter = () =>
+const makeFilterTemplate = () =>
   `<section class="main__filter filter container">
   <input
   type="radio"
@@ -72,17 +72,5 @@ const getMainFilter = () =>
 >
 </section>`.trim();
 
+export {makeFilterTemplate};
 
-/**
- * Функция возращает html разметку сортировки.
- * @return {string}
- */
-const getFilterList = () =>
-  `<div class="board__filter-list">
-    <a href="#" class="board__filter">SORT BY DEFAULT</a>
-    <a href="#" class="board__filter">SORT BY DATE up</a>
-    <a href="#" class="board__filter">SORT BY DATE down</a>
-  </div>`.trim();
-
-export {getMainFilter};
-export {getFilterList};
