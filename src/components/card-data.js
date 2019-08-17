@@ -9,7 +9,7 @@ const Unit = {
   second: 1000
 };
 
-const getCardData = () => ({
+const getTaskMockData = () => ({
   description: [
     `Изучить теорию`,
     `Сделать домашку`,
@@ -56,4 +56,4 @@ const getCardData = () => ({
   },
 });
 
-export {getCardData};
+export {getTaskMockData};
