@@ -1,4 +1,5 @@
 import {getTaskMockData} from './components/card-data';
+import {getRandomInteger} from './components/util';
 import {makeMenuTemplate} from './components/menu';
 import {makeSearchTemplate} from './components/search';
 import {makeFilterTemplate} from './components/filters';
@@ -8,7 +9,9 @@ import {makeTaskEditTemplate} from './components/card-edit';
 import {makeLoadMoreButtonTemplate} from './components/button';
 
 const CARD_COUNT = 3;
-const tasksAmount = 32;
+const MIN_TASKS_ON_PAGE = 17;
+const MAX_TASKS_ON_PAGE = 45;
+const tasksAmount = getRandomInteger(MIN_TASKS_ON_PAGE, MAX_TASKS_ON_PAGE);
 const tasksAmountOnPage = 8;
 
 /**
@@ -22,33 +25,26 @@ const createTasksMock = (cardCount, taskData) => new Array(cardCount)
                                                         .map(taskData)
                                                         .map(makeTaskTemplate)
                                                         .join(``);
-
-const createTasksMockArray = (taskData) => {
-  const TasksArray = [];
-  for (let i = 0; i < tasksAmountOnPage; i++) {
-    TasksArray.push(taskData());
+/** Функция возращает массив объектов с моковыми данными тасков
+ *
+ * @param {function} makeTaskData функция которая возращает объект с моковыми данными одной таски
+ * @param {numder} tasksNumberOnPage кол-во тасков
+ * @return {array} возращает массив объектов с моковыми данными тасков
+ */
+const createTasksMockArray = (makeTaskData, tasksNumberOnPage) => {
+  const tasksArray = [];
+  for (let i = 0; i < tasksNumberOnPage; i++) {
+    tasksArray.push(makeTaskData());
   }
-  console.log(TasksArray);
-  return TasksArray;
+  return tasksArray;
 };
-console.log(createTasksMockArray(getTaskMockData));
+const tasksMockData = createTasksMockArray(getTaskMockData, tasksAmount);
 
-const getTasksData = (numberOfTasks, tasksPageAmount) => {
-  const modulo = numberOfTasks % tasksPageAmount;
-  const pageAmoutn = modulo === 0 ?
-    parseInt(tasksAmount / tasksPageAmount, 10)
-    : parseInt(tasksAmount / tasksPageAmount, 10) + 1;
-  const allTasksMock = [];
-  if (modulo === 0) {
-    for (let i = 0; i < pageAmoutn; i++) {
-      allTasksMock.push(createTasksMockArray(getTaskMockData));
-    }
-    return allTasksMock;
-  }
+const makePageMockData = (tasksData, tasksNumberOnPage) => {
+  const modulo = tasksData.length % tasksNumberOnPage;
+  const pagesNumber = Math.floor(tasksData.length / tasksNumberOnPage);
 
-  console.log(allTasksMock);
 };
-getTasksData(tasksAmount, tasksAmountOnPage);
 
 /**
  * Функция возращает html разметку контейнера для board.

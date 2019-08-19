@@ -1,6 +1,11 @@
 const MIN_TAGS_AMOUNT = 0;
 const MAX_TAGS_AMOUNT = 3;
 
+/** Функция возращает случайное логическое значение true или false.
+ *  @return {boolean} логическое значение true или false.
+ */
+const randomBoolean = () => Boolean(Math.round(Math.random()));
+
 //  Функция возращает случайное целое число между min и max - включительно
 const getRandomInteger = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -27,3 +32,5 @@ const shuffleElemetsOfArray = (array) => {
 
 export {getTagsArray};
 export {shuffleElemetsOfArray};
+export {randomBoolean};
+export {getRandomInteger};

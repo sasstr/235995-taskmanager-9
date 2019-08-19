@@ -1,5 +1,4 @@
-import {getTagsArray} from './util';
-import {shuffleElemetsOfArray} from './util';
+import {getTagsArray, randomBoolean, shuffleElemetsOfArray} from './util';
 
 const Unit = {
   week: 7,
@@ -34,9 +33,9 @@ const getTaskMockData = () => ({
   },
   repeatingDays: {
     'mo': false,
-    'to': Boolean(Math.round(Math.random())),
-    'we': false,
-    'th': false,
+    'to': randomBoolean(),
+    'we': randomBoolean(),
+    'th': randomBoolean(),
     'fr': true,
     'sa': false,
     'su': false,
@@ -49,7 +48,7 @@ const getTaskMockData = () => ({
     `pink`,
   ][Math.floor(Math.random() * 5)],
   get isFavorite() {
-    return Math.round(Math.random()) > 0.5 ? true : false;
+    return randomBoolean();
   },
   get isArchive() {
     return Date.now() > this.dueDate ? true : false;
