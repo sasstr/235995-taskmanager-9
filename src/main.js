@@ -76,14 +76,13 @@ renderTemplate(main, makeFilterTemplate());
 renderTemplate(main, compileBoardTemplate());
 
 let clickCount = 0;
-console.log(tasksMockData);
 const loadMoreBtn = document.querySelector(`.load-more`);
 loadMoreBtn.addEventListener(`click`, () => {
   ++clickCount;
-  let arr = tasksMockData.slice((clickCount - 1) * tasksAmountOnPage, tasksAmountOnPage * clickCount);
-  if (arr.length === 0) {
+  const clickData = tasksMockData.slice((clickCount - 1) * tasksAmountOnPage, tasksAmountOnPage * clickCount);
+  if (Math.ceil(tasksMockData.length / tasksAmountOnPage) === clickCount) {
     loadMoreBtn.style.display = `none`;
-    return;
+    return clickData;
   }
-  return console.log(tasksMockData.slice((clickCount - 1) * tasksAmountOnPage, tasksAmountOnPage * clickCount));
+  clickData;
 });
