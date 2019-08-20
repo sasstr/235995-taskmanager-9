@@ -2,9 +2,6 @@ const filterData = [
   {
     title: `All`,
     count: tasksMockData.length,
-    get count() {
-      return tasksMockData.length;
-    },
   },
   {
     title: `Overdue`,

@@ -36,9 +36,45 @@ const tasksMockData = createTasksMockArray(getTaskMockData, tasksAmount);
 const firstPartMockData = tasksMockData.slice(0, tasksAmountOnPage);
 console.log(tasksMockData);
 
-const getAmountFilter = (tasksMockData, filterTitle) => {
-  tasksMockData.filter( );
+const getAmountFilter = (data) => {
+  const filterCounter = {
+    all: data.length,
+    overdue: 0,
+    today: 0,
+    favorites: 0,
+    repeating: 0,
+    tags: 0,
+    archive: 0,
+  };
+
+  const checkRepeating = (days) => Object.values(days).some((dayRepeat) => dayRepeat);
+  const changeTimeToDate = (time) => new Date(time).toDateString();
+
+  data.forEach((task) => {
+    if (checkRepeating(task.repeatingDays)) {
+      filterCounter.repeating++;
+    }
+    if (changeTimeToDate(task.dueDate) < changeTimeToDate(Date.now())) {
+      filterCounter.overdue++;
+    }
+    if (changeTimeToDate(task.dueDate) === changeTimeToDate(Date.now())) {
+      filterCounter.today++;
+    }
+    if (task.tagsList.size > 0) {
+      filterCounter.tags++;
+    }
+    if (task.isArchive) {
+      filterCounter.archive++;
+    }
+    if (task.isFavorite) {
+      filterCounter.favorites++;
+    }
+  });
+  return filterCounter;
 };
+
+const filterCount = getAmountFilter(tasksMockData);
+console.log(filterCount);
 /**
  * Функция возращает html разметку контейнера для board.
  * @param {array} mockData
