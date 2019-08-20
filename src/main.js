@@ -39,11 +39,10 @@ const createTasksMockArray = (makeTaskData, tasksNumberOnPage) => {
   return tasksArray;
 };
 const tasksMockData = createTasksMockArray(getTaskMockData, tasksAmount);
-
-const makePageMockData = (tasksData, tasksNumberOnPage) => {
-  const modulo = tasksData.length % tasksNumberOnPage;
-  const pagesNumber = Math.floor(tasksData.length / tasksNumberOnPage);
-
+const makeMockDataForOnePage = (tasksData, tasksNumberOnPage) => {
+  let index = 0;
+  const pagesNumber = Math.cail(tasksData.length / tasksNumberOnPage);
+  tasksData.slice(index, tasksNumberOnPage);
 };
 
 /**
@@ -75,3 +74,16 @@ renderTemplate(mainControl, makeMenuTemplate());
 renderTemplate(main, makeSearchTemplate());
 renderTemplate(main, makeFilterTemplate());
 renderTemplate(main, compileBoardTemplate());
+
+let clickCount = 0;
+console.log(tasksMockData);
+const loadMoreBtn = document.querySelector(`.load-more`);
+loadMoreBtn.addEventListener(`click`, () => {
+  ++clickCount;
+  let arr = tasksMockData.slice((clickCount - 1) * tasksAmountOnPage, tasksAmountOnPage * clickCount);
+  if (arr.length === 0) {
+    loadMoreBtn.style.display = `none`;
+    return;
+  }
+  return console.log(tasksMockData.slice((clickCount - 1) * tasksAmountOnPage, tasksAmountOnPage * clickCount));
+});
