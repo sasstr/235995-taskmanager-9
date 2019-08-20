@@ -8,7 +8,6 @@ import {makeTaskTemplate} from './components/card';
 import {makeTaskEditTemplate} from './components/card-edit';
 import {makeLoadMoreButtonTemplate} from './components/button';
 
-const CARD_COUNT = 3;
 const MIN_TASKS_ON_PAGE = 17;
 const MAX_TASKS_ON_PAGE = 45;
 const tasksAmount = getRandomInteger(MIN_TASKS_ON_PAGE, MAX_TASKS_ON_PAGE);
@@ -16,15 +15,10 @@ const tasksAmountOnPage = 8;
 
 /**
  * Функция возращает разметку карточек задач.
- * @param {number} cardCount колличество карточек задач.
- * @param {object} taskData моковые данные для карточки задачи.map(getCard())
+ * @param {object} taskData моковые данные для карточки задачи.
  * @return {string}
  */
-const createTasksMock = (cardCount, taskData) => new Array(cardCount)
-                                                        .fill(``)
-                                                        .map(taskData)
-                                                        .map(makeTaskTemplate)
-                                                        .join(``);
+const createTasksMock = (taskData) => taskData.map(makeTaskTemplate).join(``);
 /** Функция возращает массив объектов с моковыми данными тасков
  *
  * @param {function} makeTaskData функция которая возращает объект с моковыми данными одной таски
@@ -39,22 +33,23 @@ const createTasksMockArray = (makeTaskData, tasksNumberOnPage) => {
   return tasksArray;
 };
 const tasksMockData = createTasksMockArray(getTaskMockData, tasksAmount);
-const makeMockDataForOnePage = (tasksData, tasksNumberOnPage) => {
-  let index = 0;
-  const pagesNumber = Math.cail(tasksData.length / tasksNumberOnPage);
-  tasksData.slice(index, tasksNumberOnPage);
-};
+const firstPartMockData = tasksMockData.slice(0, tasksAmountOnPage);
+console.log(tasksMockData);
 
+const getAmountFilter = (tasksMockData, filterTitle) => {
+  tasksMockData.filter( );
+};
 /**
  * Функция возращает html разметку контейнера для board.
- * @return {string}
+ * @param {array} mockData
+ * @return {string} разметку шаблона
  */
-const compileBoardTemplate = () =>
+const compileBoardTemplate = (mockData = firstPartMockData) =>
   `<section class="board container">
     ${makeSortTemplate()}
     <div class="board__tasks">
       ${makeTaskEditTemplate()}
-      ${createTasksMock(CARD_COUNT, getTaskMockData)}
+      ${createTasksMock(mockData)}
     </div>
     ${makeLoadMoreButtonTemplate()}
   </section>`.trim();
@@ -75,14 +70,17 @@ renderTemplate(main, makeSearchTemplate());
 renderTemplate(main, makeFilterTemplate());
 renderTemplate(main, compileBoardTemplate());
 
-let clickCount = 0;
+let clickCounter = 1;
 const loadMoreBtn = document.querySelector(`.load-more`);
-loadMoreBtn.addEventListener(`click`, () => {
-  ++clickCount;
-  const clickData = tasksMockData.slice((clickCount - 1) * tasksAmountOnPage, tasksAmountOnPage * clickCount);
-  if (Math.ceil(tasksMockData.length / tasksAmountOnPage) === clickCount) {
-    loadMoreBtn.style.display = `none`;
-    return clickData;
+const loadMoreTasks = () => {
+  const boardTasks = main.querySelector(`.board__tasks`);
+  ++clickCounter;
+  const clickData = tasksMockData.slice((clickCounter - 1) * tasksAmountOnPage, tasksAmountOnPage * clickCounter);
+  if (Math.ceil(tasksMockData.length / tasksAmountOnPage) === clickCounter) {
+    loadMoreBtn.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
+    renderTemplate(boardTasks, createTasksMock(clickData));
   }
-  clickData;
-});
+  renderTemplate(boardTasks, createTasksMock(clickData));
+};
+
+loadMoreBtn.addEventListener(`click`, loadMoreTasks);

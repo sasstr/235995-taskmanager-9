@@ -1,8 +1,9 @@
 const filterData = [
   {
     title: `All`,
+    count: tasksMockData.length,
     get count() {
-      return this.countAll;
+      return tasksMockData.length;
     },
   },
   {
