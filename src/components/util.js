@@ -1,6 +1,22 @@
 const MIN_TAGS_AMOUNT = 0;
 const MAX_TAGS_AMOUNT = 3;
 
+/**
+ * Функция рендерит разметку.
+ * @param {node} container элемент в который добавляется разметка из cb.
+ * @param {string} markup функция которая возращает разметку, которая добавляется в container.
+ * @return {void}
+ */
+const renderTemplate = (container, markup) => container.insertAdjacentHTML(`beforeend`, markup);
+
+/**
+ * Функция возращает разметку карточек задач.
+ * @param {object} taskData моковые данные для карточки задачи.
+ * @param {function} makeTaskTemp Функция, которая возращает разметку компонента задачи.
+ * @return {string}
+ */
+const createTasksMock = (taskData, makeTaskTemp) => taskData.map(makeTaskTemp).join(``);
+
 /** Функция возращает случайное логическое значение true или false.
  *  @return {boolean} логическое значение true или false.
  */
@@ -34,3 +50,5 @@ export {getTagsArray};
 export {shuffleElemetsOfArray};
 export {randomBoolean};
 export {getRandomInteger};
+export {createTasksMock};
+export {renderTemplate};

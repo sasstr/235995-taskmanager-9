@@ -1,8 +1,8 @@
-import {getTaskMockData} from './components/card-data';
-import {getRandomInteger} from './components/util';
+import {getTaskMockData, createTasksMockArray, getfilterData, getAmountFilters} from './components/data';
+import {getRandomInteger, createTasksMock, renderTemplate} from './components/util';
 import {makeMenuTemplate} from './components/menu';
 import {makeSearchTemplate} from './components/search';
-import {makeFilterTemplate} from './components/filters';
+import {makeFiltersTemplate} from './components/filters';
 import {makeSortTemplate} from './components/sort';
 import {makeTaskTemplate} from './components/card';
 import {makeTaskEditTemplate} from './components/card-edit';
@@ -10,71 +10,13 @@ import {makeLoadMoreButtonTemplate} from './components/button';
 
 const MIN_TASKS_ON_PAGE = 17;
 const MAX_TASKS_ON_PAGE = 45;
+const TASKS_AMOUNT_ON_PAGE = 8;
 const tasksAmount = getRandomInteger(MIN_TASKS_ON_PAGE, MAX_TASKS_ON_PAGE);
-const tasksAmountOnPage = 8;
-
-/**
- * Функция возращает разметку карточек задач.
- * @param {object} taskData моковые данные для карточки задачи.
- * @return {string}
- */
-const createTasksMock = (taskData) => taskData.map(makeTaskTemplate).join(``);
-/** Функция возращает массив объектов с моковыми данными тасков
- *
- * @param {function} makeTaskData функция которая возращает объект с моковыми данными одной таски
- * @param {numder} tasksNumberOnPage кол-во тасков
- * @return {array} возращает массив объектов с моковыми данными тасков
- */
-const createTasksMockArray = (makeTaskData, tasksNumberOnPage) => {
-  const tasksArray = [];
-  for (let i = 0; i < tasksNumberOnPage; i++) {
-    tasksArray.push(makeTaskData());
-  }
-  return tasksArray;
-};
 const tasksMockData = createTasksMockArray(getTaskMockData, tasksAmount);
-const firstPartMockData = tasksMockData.slice(0, tasksAmountOnPage);
-console.log(tasksMockData);
+const firstPartMockData = tasksMockData.slice(0, TASKS_AMOUNT_ON_PAGE);
+const amountFilters = getAmountFilters(tasksMockData);
+const filtersDataMock = getfilterData(amountFilters);
 
-const getAmountFilter = (data) => {
-  const filterCounter = {
-    all: data.length,
-    overdue: 0,
-    today: 0,
-    favorites: 0,
-    repeating: 0,
-    tags: 0,
-    archive: 0,
-  };
-
-  const checkRepeating = (days) => Object.values(days).some((dayRepeat) => dayRepeat);
-  const changeTimeToDate = (time) => new Date(time).toDateString();
-
-  data.forEach((task) => {
-    if (checkRepeating(task.repeatingDays)) {
-      filterCounter.repeating++;
-    }
-    if (changeTimeToDate(task.dueDate) < changeTimeToDate(Date.now())) {
-      filterCounter.overdue++;
-    }
-    if (changeTimeToDate(task.dueDate) === changeTimeToDate(Date.now())) {
-      filterCounter.today++;
-    }
-    if (task.tagsList.size > 0) {
-      filterCounter.tags++;
-    }
-    if (task.isArchive) {
-      filterCounter.archive++;
-    }
-    if (task.isFavorite) {
-      filterCounter.favorites++;
-    }
-  });
-  return filterCounter;
-};
-
-const filterCount = getAmountFilter(tasksMockData);
-console.log(filterCount);
 /**
  * Функция возращает html разметку контейнера для board.
  * @param {array} mockData
@@ -85,38 +27,31 @@ const compileBoardTemplate = (mockData = firstPartMockData) =>
     ${makeSortTemplate()}
     <div class="board__tasks">
       ${makeTaskEditTemplate()}
-      ${createTasksMock(mockData)}
+      ${createTasksMock(mockData, makeTaskTemplate)}
     </div>
     ${makeLoadMoreButtonTemplate()}
   </section>`.trim();
-
-/**
- * Функция рендерит разметку.
- * @param {node} container элемент в который добавляется разметка из cb.
- * @param {string} markup функция которая возращает разметку, которая добавляется в container.
- * @return {void}
- */
-const renderTemplate = (container, markup) => container.insertAdjacentHTML(`beforeend`, markup);
 
 const main = document.querySelector(`.main`);
 const mainControl = main.querySelector(`.main__control`);
 
 renderTemplate(mainControl, makeMenuTemplate());
 renderTemplate(main, makeSearchTemplate());
-renderTemplate(main, makeFilterTemplate());
+renderTemplate(main, makeFiltersTemplate(filtersDataMock));
 renderTemplate(main, compileBoardTemplate());
 
 let clickCounter = 1;
 const loadMoreBtn = document.querySelector(`.load-more`);
-const loadMoreTasks = () => {
+const onLoadMoreTasks = () => {
   const boardTasks = main.querySelector(`.board__tasks`);
   ++clickCounter;
-  const clickData = tasksMockData.slice((clickCounter - 1) * tasksAmountOnPage, tasksAmountOnPage * clickCounter);
-  if (Math.ceil(tasksMockData.length / tasksAmountOnPage) === clickCounter) {
+  const clickData = tasksMockData.slice((clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * clickCounter);
+  if (Math.ceil(tasksMockData.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
     loadMoreBtn.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
-    renderTemplate(boardTasks, createTasksMock(clickData));
+    loadMoreBtn.removeEventListener(`click`, onLoadMoreTasks);
+    renderTemplate(boardTasks, createTasksMock(clickData, makeTaskTemplate));
   }
-  renderTemplate(boardTasks, createTasksMock(clickData));
+  renderTemplate(boardTasks, createTasksMock(clickData, makeTaskTemplate));
 };
 
-loadMoreBtn.addEventListener(`click`, loadMoreTasks);
+loadMoreBtn.addEventListener(`click`, onLoadMoreTasks);
