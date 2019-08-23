@@ -2,7 +2,7 @@
  * Функция возращает html разметку карточки в состоянии редоктирования.
  * @return {string}
  */
-const getCardEditForm = () =>
+const makeTaskEditTemplate = () =>
   `<article class="card card--edit card--yellow card--repeat">
   <form class="card__form" method="get">
     <div class="card__inner">
@@ -269,6 +269,6 @@ const getCardEditForm = () =>
       </div>
     </div>
   </form>
-</article>`;
+</article>`.trim();
 
-export {getCardEditForm};
+export {makeTaskEditTemplate};
