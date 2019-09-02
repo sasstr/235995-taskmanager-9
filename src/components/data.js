@@ -1,4 +1,4 @@
-import {getTagsArray, randomBoolean, shuffleElemetsOfArray, getRandomInteger} from './util';
+import {getTagsArray, randomBoolean, shuffleElemetsOfArray} from './util';
 
 const Unit = {
   week: 7,
@@ -8,7 +8,7 @@ const Unit = {
   second: 1000
 };
 
-const getTaskMockData = () => ({
+const getTaskData = () => ({
   description: [
     `Изучить теорию`,
     `Сделать домашку`,
@@ -50,7 +50,7 @@ const getTaskMockData = () => ({
   get isFavorite() {
     return randomBoolean();
   },
-  get isArchive() {
+  isArchive() {
     return Date.now() > this.dueDate ? true : false;
   },
 });
@@ -61,7 +61,7 @@ const getTaskMockData = () => ({
  * @param {numder} tasksNumberOnPage кол-во тасков
  * @return {array} возращает массив объектов с моковыми данными тасков
  */
-const createTasksMockArray = (makeTaskData, tasksNumberOnPage) => {
+const createTasksArray = (makeTaskData, tasksNumberOnPage) => {
   const tasksArray = [];
   for (let i = 0; i < tasksNumberOnPage; i++) {
     tasksArray.push(makeTaskData());
@@ -137,4 +137,10 @@ const getfilterData = (filterCount) => ([
   },
 ]);
 
-export {getTaskMockData, createTasksMockArray, getfilterData, getAmountFilters};
+const getSorts = () => [
+  `SORT BY DEFAULT`,
+  `SORT BY DATE up`,
+  `SORT BY DATE down`
+];
+
+export {getTaskData, createTasksArray, getfilterData, getAmountFilters, getSorts};

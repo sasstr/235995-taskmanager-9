@@ -11,11 +11,11 @@ const renderTemplate = (container, markup) => container.insertAdjacentHTML(`befo
 
 /**
  * Функция возращает разметку карточек задач.
- * @param {object} taskData моковые данные для карточки задачи.
+ * @param {object} tasksData моковые данные для карточки задачи.
  * @param {function} makeTaskTemp Функция, которая возращает разметку компонента задачи.
  * @return {string}
  */
-const createTasksMock = (taskData, makeTaskTemp) => taskData.map(makeTaskTemp).join(``);
+const createTasks = (tasksData, makeTaskTemp) => tasksData.map(makeTaskTemp).join(``);
 
 /** Функция возращает случайное логическое значение true или false.
  *  @return {boolean} логическое значение true или false.
@@ -46,9 +46,18 @@ const shuffleElemetsOfArray = (array) => {
   return cloneArray;
 };
 
-export {getTagsArray};
-export {shuffleElemetsOfArray};
-export {randomBoolean};
-export {getRandomInteger};
-export {createTasksMock};
-export {renderTemplate};
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
+export {
+  getTagsArray,
+  shuffleElemetsOfArray,
+  randomBoolean,
+  getRandomInteger,
+  createTasks,
+  renderTemplate,
+  createElement,
+};

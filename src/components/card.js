@@ -1,8 +1,26 @@
+import {createElement} from './util';
 /**
  * Функция возращает html разметку карточки.
  * @return {string}
  */
-const makeTaskTemplate = ({description, dueDate, tagsList, repeatingDays, color}) => `<article class="card card--${color} ${Object.keys(repeatingDays).some((day) => repeatingDays[day]) ? `card--repeat` : ``}">
+
+export default class Card {
+  constructor({description, dueDate, tagsList, repeatingDays, color}) {
+    this._description = description;
+    this._dueDate = dueDate;
+    this._tagsList = tagsList;
+    this._repeatingDays = repeatingDays;
+    this._color = color;
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  getTemplate() {
+    return `<article class="card card--${this._color} ${Object.keys(this._repeatingDays).some((day) => this._repeatingDays[day]) ? `card--repeat` : ``}">
   <div class="card__form">
     <div class="card__inner">
       <div class="card__control">
@@ -27,7 +45,7 @@ const makeTaskTemplate = ({description, dueDate, tagsList, repeatingDays, color}
       </div>
 
       <div class="card__textarea-wrap">
-        <p class="card__text">${description}</p>
+        <p class="card__text">${this._description}</p>
       </div>
 
       <div class="card__settings">
@@ -35,15 +53,15 @@ const makeTaskTemplate = ({description, dueDate, tagsList, repeatingDays, color}
           <div class="card__dates">
             <div class="card__date-deadline">
               <p class="card__input-deadline-wrap">
-                <span class="card__date">${new Date(dueDate).toDateString()}</span>
-                <span class="card__time">11:15 PM</span>
+                <span class="card__date">${new Date(this._dueDate).toDateString()}</span>
+                <span class="card__time">${new Date(this._dueDate).toLocaleString().slice(11, 17)}</span>
               </p>
             </div>
           </div>
 
           <div class="card__hashtag">
             <div class="card__hashtag-list">
-                  ${Array.from(tagsList).map((tag) => `<span class="card__hashtag-inner">
+                  ${Array.from(this._tagsList).map((tag) => `<span class="card__hashtag-inner">
                   <span class="card__hashtag-name">
                     #${tag}</span>
                   </span>`).join(``)}
@@ -54,5 +72,5 @@ const makeTaskTemplate = ({description, dueDate, tagsList, repeatingDays, color}
     </div>
   </div>
 </article>`.trim();
-
-export {makeTaskTemplate};
+  }
+}

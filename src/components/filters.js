@@ -1,23 +1,33 @@
-/**
- * Функция возращает html разметку фильтра.
- * @return {string}
- */
-const makeFilterTemplate = ({title, count}) =>
-  `<input
-  type="radio"
-  id="filter__${title}"
-  class="filter__input visually-hidden"
-  name="filter"
-  ${title === `all` ? `checked` : ``}
-  ${count === 0 ? `disabled` : ``}
-/>
-<label for="filter__${title}" class="filter__label">
-${title} <span class="filter__${title}-count">${count}</span></label>`.trim();
+import {createElement} from './util';
 
-const makeFiltersTemplate = (filtersData) =>
-  `<section class="main__filter filter container">
-    ${filtersData.map((filter) => makeFilterTemplate(filter)).join(``)}
-  </section>`.trim();
+export default class Filters {
+  constructor(filtersData) {
+    this._filtersData = filtersData;
+  }
 
-export {makeFiltersTemplate};
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
 
+  getfilterTemplate({title, count}) {
+    return `<input
+    type="radio"
+    id="filter__${title}"
+    class="filter__input visually-hidden"
+    name="filter"
+    ${title === `all` ? `checked` : ``}
+    ${count === 0 ? `disabled` : ``}
+    />
+    <label for="filter__${title}" class="filter__label">
+    ${title} <span class="filter__${title}-count">${count}</span></label>`.trim();
+  }
+
+  getTemplate() {
+    return `<section class="main__filter filter container">
+      ${this._filtersData.map((filter) => this.getfilterTemplate(filter)).join(``)}
+    </section>`.trim();
+  }
+}
