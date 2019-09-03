@@ -1,4 +1,4 @@
-import {createElement} from './util';
+import {createElement} from './util'; // #TODO Заполнить шаблон из методов класса в свои места.
 
 export default class CardEdit {
   constructor({description, dueDate, tagsList, repeatingDays, color, colors, tags}) {
@@ -145,12 +145,12 @@ export default class CardEdit {
               <button class="card__repeat-toggle" type="button">
                 repeat:<span class="card__repeat-status">yes</span>
               </button>
-
+<!-- card__repeat-days --> ${this.getRepeatDays()}
             </div>
-
+<!-- card__hashtag --> ${this.getHashtags()}
           </div>
         </div>
-
+<!-- card__colors-inner --> ${this.getColors()}
         <div class="card__status-btns">
           <button class="card__save" type="submit">save</button>
           <button class="card__delete" type="button">delete</button>
