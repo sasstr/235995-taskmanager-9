@@ -1,12 +1,17 @@
-import {getTaskData, createTasksArray, getfilterData, getAmountFilters, getSorts} from './components/data';
+import {getTaskData,
+  createTasksArray,
+  getfilterData,
+  getAmountFilters,
+  getSorts,
+  getMenuData} from './components/data';
 import {getRandomInteger, createTasks, renderTemplate} from './components/util';
-import {makeMenuTemplate} from './components/menu';
-import {makeSearchTemplate} from './components/search';
+import Menu from './components/menu';
+import Search from './components/search';
 import Filters from './components/filters';
-import {makeSortTemplate} from './components/sort';
+import Sort from './components/sort';
 import Card from './components/card';
 import {makeTaskEditTemplate} from './components/card-edit';
-import {makeLoadMoreButtonTemplate} from './components/button';
+import Button from './components/button';
 
 const MIN_TASKS_ON_PAGE = 12;
 const MAX_TASKS_ON_PAGE = 43;
@@ -48,7 +53,7 @@ const main = document.querySelector(`.main`);
 const mainControl = main.querySelector(`.main__control`);
 
 
-renderTemplate(mainControl, makeMenuTemplate());
+renderTemplate(mainControl, makeMenuTemplate(getMenuData()));
 renderTemplate(main, makeSearchTemplate());
 renderTemplate(main, filters.getTemplate(filtersData));
 renderTemplate(main, compileBoardTemplate());

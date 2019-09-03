@@ -143,4 +143,29 @@ const getSorts = () => [
   `SORT BY DATE down`
 ];
 
-export {getTaskData, createTasksArray, getfilterData, getAmountFilters, getSorts};
+const getMenuData = () => [
+  {
+    id: `new-task`,
+    name: `+ ADD NEW TASK`,
+    isCheced: false,
+  },
+  {
+    id: `task`,
+    name: `TASKS`,
+    isCheced: true,
+  },
+  {
+    id: `statistic`,
+    name: `STATISTICS`,
+    isCheced: false,
+  }
+];
+
+export {
+  getTaskData,
+  createTasksArray,
+  getfilterData,
+  getAmountFilters,
+  getSorts,
+  getMenuData
+};

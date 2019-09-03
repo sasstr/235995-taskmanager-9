@@ -1,10 +1,6 @@
 import {createElement} from './util';
 
 export default class Search {
-  constructor() {
-  // Что тут писать не понятно ? #TODO
-  }
-
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());

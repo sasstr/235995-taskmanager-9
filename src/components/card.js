@@ -1,8 +1,4 @@
 import {createElement} from './util';
-/**
- * Функция возращает html разметку карточки.
- * @return {string}
- */
 
 export default class Card {
   constructor({description, dueDate, tagsList, repeatingDays, color}) {
