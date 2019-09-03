@@ -12,15 +12,13 @@ export default class Sort {
     return this._element;
   }
 
+  removeElement() {
+    this._element = null;
+  }
+
   getTemplate() {
     return this._sortsData.map((sort) => `<div class="board__filter-list">
     <a href="#" class="board__filter">${sort}</a>
   </div>`.trim());
   }
 }
-const makeSortTemplate = (sortsData) =>
-  sortsData.map((it) => `<div class="board__filter-list">
-    <a href="#" class="board__filter">${it}</a>
-  </div>`.trim()).join(``);
-
-export {makeSortTemplate};

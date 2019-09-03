@@ -12,7 +12,11 @@ export default class Filters {
     return this._element;
   }
 
-  getfilterTemplate({title, count}) {
+  removeElement() {
+    this._element = null;
+  }
+
+  _getfilterTemplate({title, count}) {
     return `<input
     type="radio"
     id="filter__${title}"
@@ -27,7 +31,7 @@ export default class Filters {
 
   getTemplate() {
     return `<section class="main__filter filter container">
-      ${this._filtersData.map((filter) => this.getfilterTemplate(filter)).join(``)}
+      ${this._filtersData.map((filter) => this._getfilterTemplate(filter)).join(``)}
     </section>`.trim();
   }
 }
