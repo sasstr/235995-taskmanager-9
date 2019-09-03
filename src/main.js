@@ -10,7 +10,7 @@ import Search from './components/search';
 import Filters from './components/filters';
 import Sort from './components/sort';
 import Card from './components/card';
-import {makeTaskEditTemplate} from './components/card-edit';
+import CardEdit from './components/card-edit';
 import Button from './components/button';
 
 const MIN_TASKS_ON_PAGE = 12;

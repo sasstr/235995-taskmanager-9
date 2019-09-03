@@ -46,6 +46,13 @@ const shuffleElemetsOfArray = (array) => {
   return cloneArray;
 };
 
+/** Функция возращает случайный элемент массива
+ *
+ * @param {array} array массив
+ * @return {mix} случайный элемент массива
+ */
+const getRendomItemOfArray = (array) => array[getRandomInteger(0, array.length)];
+
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
@@ -60,4 +67,5 @@ export {
   createTasks,
   renderTemplate,
   createElement,
+  getRendomItemOfArray,
 };

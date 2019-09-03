@@ -1,4 +1,8 @@
-import {getTagsArray, randomBoolean, shuffleElemetsOfArray} from './util';
+import {getTagsArray,
+  randomBoolean,
+  shuffleElemetsOfArray,
+  getRendomItemOfArray
+} from './util';
 
 const Unit = {
   week: 7,
@@ -8,12 +12,22 @@ const Unit = {
   second: 1000
 };
 
+const description = [
+  `Изучить теорию`,
+  `Сделать домашку`,
+  `Пройти интенсив на соточку`,
+];
+
+const colors = [
+  `black`,
+  `blue`,
+  `yellow`,
+  `green`,
+  `pink`,
+];
+
 const getTaskData = () => ({
-  description: [
-    `Изучить теорию`,
-    `Сделать домашку`,
-    `Пройти интенсив на соточку`,
-  ][Math.floor(Math.random() * 3)],
+  description: getRendomItemOfArray(description),
   dueDate: Date.now() + 1 + Math.floor(Math.random() * Unit.week) * Unit.day * Unit.hour * Unit.minute * Unit.second,
   tags: new Set([
     `homework`,
@@ -40,13 +54,8 @@ const getTaskData = () => ({
     'sa': false,
     'su': false,
   },
-  color: [
-    `black`,
-    `blue`,
-    `yellow`,
-    `green`,
-    `pink`,
-  ][Math.floor(Math.random() * 5)],
+  colors,
+  color: getRendomItemOfArray(colors),
   get isFavorite() {
     return randomBoolean();
   },

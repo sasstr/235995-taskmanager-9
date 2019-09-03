@@ -1,11 +1,13 @@
 import {createElement} from './util';
 
-export default class Card {
-  constructor({description, dueDate, tagsList, repeatingDays, color}) {
+export default class CardEdit {
+  constructor({description, dueDate, tagsList, repeatingDays, color, colors, tags}) {
     this._description = description;
     this._dueDate = dueDate;
     this._tagsList = tagsList;
+    this._tags = tags;
     this._repeatingDays = repeatingDays;
+    this._colors = colors;
     this._color = color;
   }
   getElement() {
@@ -19,16 +21,16 @@ export default class Card {
     this._element = null;
   }
 
-  getRepeatDays(days) {
+  getRepeatDays() {
     return `<fieldset class="card__repeat-days">
     <div class="card__repeat-days-inner">
-      ${Object.keys(days).map((day) => `<input
+      ${Object.keys(this._repeatingDays).map((day) => `<input
       class="visually-hidden card__repeat-day-input"
       type="checkbox"
       id="repeat-${day}-4"
       name="repeat"
       value="${day}"
-      ${days[day] ? `checked` : ``}
+      ${this._repeatingDays[day] ? `checked` : ``}
     />
     <label class="card__repeat-day" for="repeat-${day}-4"
       >${day}</label
@@ -37,7 +39,7 @@ export default class Card {
   </fieldset>`.trim();
   }
 
-  getHashtags(hashtags) {
+  getHashtags() {
     return `<div class="card__hashtag">
       <div class="card__hashtag-list">
           <span class="card__hashtag-inner">
@@ -48,7 +50,7 @@ export default class Card {
             class="card__hashtag-hidden-input"
           />
           <p class="card__hashtag-name">
-            ${hashtags.map((tag) => `#${tag}`)}
+            ${Array.from(this._tags).map((tag) => `#${tag}`)}
           </p>
           <button type="button" class="card__hashtag-delete">
             delete
@@ -67,11 +69,11 @@ export default class Card {
     </div>`.trim();
   }
 
-  getColors(colors) {
+  getColors() {
     return `<div class="card__colors-inner">
       <h3 class="card__colors-title">Color</h3>
       <div class="card__colors-wrap">
-      ${colors.map((color) => `<input
+      ${this._colors.map((color) => `<input
       type="radio"
       id="color-${color}-4"
       class="card__color-input card__color-input--${color} visually-hidden"
@@ -84,14 +86,12 @@ export default class Card {
       class="card__color card__color--${color}"
       >${color}</label
     >`).trim()}
-
-
       </div>
     </div>`.trim();
   }
 
   getTemplate() {
-    return `<article class="card card--edit card--yellow card--repeat">
+    return `<article class="card card--edit ${this._color} card--${Object.keys(this._repeatingDays).some((day) => this._repeatingDays[day]) ? `card--repeat` : ``}">
     <form class="card__form" method="get">
 
       <div class="card__inner">
@@ -127,7 +127,7 @@ export default class Card {
           <div class="card__details">
             <div class="card__dates">
               <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">yes</span>
+                date: <span class="card__date-status">${Object.keys(this._repeatingDays).some((day) => this._repeatingDays[day]) ? `YES` : `NO`}</span>
               </button>
 
               <fieldset class="card__date-deadline">
@@ -137,7 +137,7 @@ export default class Card {
                     type="text"
                     placeholder=""
                     name="date"
-                    value="23 September 11:15 PM"
+                    value="${new Date(this._dueDate).toDateString()}"
                   />
                 </label>
               </fieldset>
