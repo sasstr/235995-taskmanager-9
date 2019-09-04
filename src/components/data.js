@@ -71,13 +71,10 @@ const getTaskData = () => ({
  * @return {array} возращает массив объектов с моковыми данными тасков
  */
 const createTasksArray = (makeTaskData, tasksNumberOnPage) => {
-  const tasksArray = [];
-  for (let i = 0; i < tasksNumberOnPage; i++) {
-    tasksArray.push(makeTaskData());
-  }
-  return tasksArray;
+  return new Array(tasksNumberOnPage).fill(``)
+                                    .map(makeTaskData);
 };
-
+// return new Array(tasksNumberOnPage).fill(``).map(makeTaskData);
 const getAmountFilters = (data) => {
   const filterCounter = {
     all: data.length,
@@ -102,7 +99,7 @@ const getAmountFilters = (data) => {
     if (changeTimeToDate(task.dueDate) === changeTimeToDate(Date.now())) {
       filterCounter.today++;
     }
-    if (task.tagsList.size > 0) {
+    if (task.tagsList.length > 0) {
       filterCounter.tags++;
     }
     if (task.isArchive) {
@@ -156,17 +153,17 @@ const getMenuData = () => [
   {
     id: `new-task`,
     name: `+ ADD NEW TASK`,
-    isCheced: false,
+    isChecked: false,
   },
   {
     id: `task`,
     name: `TASKS`,
-    isCheced: true,
+    isChecked: true,
   },
   {
     id: `statistic`,
     name: `STATISTICS`,
-    isCheced: false,
+    isChecked: false,
   }
 ];
 

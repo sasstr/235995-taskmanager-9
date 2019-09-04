@@ -1,6 +1,9 @@
 const MIN_TAGS_AMOUNT = 0;
 const MAX_TAGS_AMOUNT = 3;
-
+const Position = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
 /**
  * Функция рендерит разметку.
  * @param {node} container элемент в который добавляется разметка из cb.
@@ -8,6 +11,24 @@ const MAX_TAGS_AMOUNT = 3;
  * @return {void}
  */
 const renderTemplate = (container, markup) => container.insertAdjacentHTML(`beforeend`, markup);
+
+// Рендер и анрендер для компонент
+const render = (container, element, place = Position.BEFOREEND) => {
+  switch (place) {
+    case Position.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case Position.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
+const unrender = (element) => {
+  if (element) {
+    element.remove();
+  }
+};
 
 /**
  * Функция возращает разметку карточек задач.
@@ -68,4 +89,6 @@ export {
   renderTemplate,
   createElement,
   getRendomItemOfArray,
+  render,
+  unrender
 };

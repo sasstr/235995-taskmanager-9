@@ -2,7 +2,7 @@ import {createElement} from './util';
 
 export default class Sort {
   constructor(sortsData) {
-    this._sortData = sortsData;
+    this._sortsData = sortsData;
   }
 
   getElement() {
@@ -17,8 +17,8 @@ export default class Sort {
   }
 
   getTemplate() {
-    return this._sortsData.map((sort) => `<div class="board__filter-list">
-    <a href="#" class="board__filter">${sort}</a>
-  </div>`.trim());
+    return `<div class="board__filter-list">${this._sortsData.map((sort) =>
+      `<a href="#" class="board__filter">${sort}</a>`).join(``)}
+  </div>`.trim();
   }
 }
