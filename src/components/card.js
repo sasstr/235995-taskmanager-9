@@ -64,7 +64,7 @@ export default class Card {
                   ${Array.from(this._tagsList).map((tag) => `<span class="card__hashtag-inner">
                   <span class="card__hashtag-name">
                     #${tag}</span>
-                  </span>`).join(``)}
+                  </span>`.trim()).join(``)}
             </div>
           </div>
         </div>

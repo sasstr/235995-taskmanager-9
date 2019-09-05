@@ -7,12 +7,10 @@ const Position = {
 /**
  * Функция рендерит разметку.
  * @param {node} container элемент в который добавляется разметка из cb.
- * @param {string} markup функция которая возращает разметку, которая добавляется в container.
- * @return {void}
+ * @param {node} element функция которая возращает елемент, которая добавляется в container.
+ * @param {string} place позиция добавления в верстку.
+ * @return {void} Добавляет элементы в верстку
  */
-const renderTemplate = (container, markup) => container.insertAdjacentHTML(`beforeend`, markup);
-
-// Рендер и анрендер для компонент
 const render = (container, element, place = Position.BEFOREEND) => {
   switch (place) {
     case Position.AFTERBEGIN:
@@ -23,7 +21,7 @@ const render = (container, element, place = Position.BEFOREEND) => {
       break;
   }
 };
-
+// функция удаляет элемент из разметки
 const unrender = (element) => {
   if (element) {
     element.remove();
@@ -74,6 +72,7 @@ const shuffleElemetsOfArray = (array) => {
  */
 const getRendomItemOfArray = (array) => array[getRandomInteger(0, array.length)];
 
+// Функция создает DOM элемент DIV и в него помещает переданную разметку.
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
@@ -86,9 +85,9 @@ export {
   randomBoolean,
   getRandomInteger,
   createTasks,
-  renderTemplate,
   createElement,
   getRendomItemOfArray,
   render,
-  unrender
+  unrender,
+  Position
 };
