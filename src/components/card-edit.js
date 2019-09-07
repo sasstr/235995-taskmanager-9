@@ -23,7 +23,7 @@ export default class CardEdit {
 
   _getRepeatDays() {
     return `<div class="card__repeat-days-inner">
-      ${Object.keys(this._repeatingDays).map((day) => `<input
+      ${Object.keys(this._repeatingDays).map((day, i) => `<input
       class="visually-hidden card__repeat-day-input"
       type="checkbox"
       id="repeat-${day}-4"
@@ -31,7 +31,7 @@ export default class CardEdit {
       value="${day}"
       ${this._repeatingDays[day] ? `checked` : ``}
     />
-    <label class="card__repeat-day" for="repeat-${day}-4"
+    <label class="card__repeat-day" for="repeat-${day}-${i}"
       >${day}</label
     >`.trim()).join(``)}
     </div>`.trim();
@@ -87,8 +87,16 @@ export default class CardEdit {
     </div>`.trim();
   }
 
+  _isRepeatingDays() {
+    return Object.keys(this._repeatingDays).some((day) => this._repeatingDays[day]) ? `YES` : `NO`;
+  }
+
+  _isColor() {
+    return Object.keys(this._repeatingDays).some((day) => this._repeatingDays[day]) ? `card--repeat` : ``;
+  }
+
   getTemplate() {
-    return `<article class="card card--edit ${this._color} card--${Object.keys(this._repeatingDays).some((day) => this._repeatingDays[day]) ? `card--repeat` : ``}">
+    return `<article class="card card--edit ${this._color} card--${_isColor()}">
     <form class="card__form" method="get">
 
       <div class="card__inner">
@@ -124,7 +132,7 @@ export default class CardEdit {
           <div class="card__details">
             <div class="card__dates">
               <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">${Object.keys(this._repeatingDays).some((day) => this._repeatingDays[day]) ? `YES` : `NO`}</span>
+                date: <span class="card__date-status">${_isRepeatingDays()}</span>
               </button>
 
               <fieldset class="card__date-deadline">

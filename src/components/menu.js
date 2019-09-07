@@ -23,7 +23,7 @@ export default class Menu {
       name="control"
       id="control__${item.id}"
       class="control__input visually-hidden"
-      ${item.isCheced === true ? `checked` : ``}
+      ${item.isChecked ? `checked` : ``}
     />
     <label for="control__${item.id}" class="control__label">${item.name}</label>`.trim()).join(``)}
   </section>`.trim();
