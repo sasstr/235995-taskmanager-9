@@ -96,7 +96,7 @@ export default class CardEdit {
   }
 
   getTemplate() {
-    return `<article class="card card--edit ${this._color} card--${_isColor()}">
+    return `<article class="card card--edit ${this._color} card--${this._isColor()}">
     <form class="card__form" method="get">
 
       <div class="card__inner">
@@ -132,7 +132,7 @@ export default class CardEdit {
           <div class="card__details">
             <div class="card__dates">
               <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">${_isRepeatingDays()}</span>
+                date: <span class="card__date-status">${this._isRepeatingDays()}</span>
               </button>
 
               <fieldset class="card__date-deadline">
