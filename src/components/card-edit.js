@@ -91,8 +91,16 @@ export default class CardEdit {
     return Object.keys(this._repeatingDays).some((day) => this._repeatingDays[day]);
   }
 
+  _isCardRepeat() {
+    return this._isItem() ? `card--repeat` : ``;
+  }
+
+  _isCardStatus() {
+    return this._isItem() ? `YES` : `NO`;
+  }
+
   getTemplate() {
-    return `<article class="card card--edit ${this._color} card--${this._isItem() ? `card--repeat` : ``}">
+    return `<article class="card card--edit ${this._color} card--${this._isCardRepeat()}">
     <form class="card__form" method="get">
 
       <div class="card__inner">
@@ -128,7 +136,7 @@ export default class CardEdit {
           <div class="card__details">
             <div class="card__dates">
               <button class="card__date-deadline-toggle" type="button">
-                date: <span class="card__date-status">${this._isItem() ? `YES` : `NO`}</span>
+                date: <span class="card__date-status">${this._isCardStatus()}</span>
               </button>
 
               <fieldset class="card__date-deadline">
