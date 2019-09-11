@@ -28,13 +28,8 @@ const unrender = (element) => {
   }
 };
 
-/**
- * Функция возращает разметку карточек задач.
- * @param {object} tasksData моковые данные для карточки задачи.
- * @param {function} makeTaskTemp Функция, которая возращает разметку компонента задачи.
- * @return {string}
- */
-const createTasks = (tasksData, makeTaskTemp) => tasksData.map(makeTaskTemp).join(``);
+// Функция добавляет к элементу контейнеру элементы таски
+const makeTasks = (MockTasks, makeTask, elemContainer) => MockTasks.forEach((task) => elemContainer.append(makeTask(task)));
 
 /** Функция возращает случайное логическое значение true или false.
  *  @return {boolean} логическое значение true или false.
@@ -80,14 +75,13 @@ const createElement = (template) => {
 };
 
 export {
-  getTagsArray,
-  shuffleElemetsOfArray,
-  randomBoolean,
-  getRandomInteger,
-  createTasks,
   createElement,
+  getTagsArray,
+  getRandomInteger,
   getRendomItemOfArray,
+  makeTasks,
   render,
-  unrender,
-  Position
+  randomBoolean,
+  shuffleElemetsOfArray,
+  unrender
 };

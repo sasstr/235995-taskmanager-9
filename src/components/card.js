@@ -8,6 +8,7 @@ export default class Card {
     this._repeatingDays = repeatingDays;
     this._color = color;
   }
+
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());

@@ -5,10 +5,9 @@ import {getTaskData,
   getSorts,
   getMenuData} from './components/data';
 import {getRandomInteger,
-  createTasks,
   createElement,
-  render,
-  Position} from './components/util';
+  makeTasks,
+  render} from './components/util';
 import Menu from './components/menu';
 import Search from './components/search';
 import Filters from './components/filters';
@@ -35,7 +34,7 @@ const filters = new Filters(getfilterData(amountFilters));
 const main = document.querySelector(`.main`);
 const mainControl = main.querySelector(`.main__control`);
 
-// Функция отрисовывает карточки задач в разметку
+// Функция возращает инстанс таски
 const сreateTask = (taskMock) => {
   const task = new Card(taskMock);
   const taskEdit = new CardEdit(taskMock);
@@ -70,12 +69,11 @@ const сreateTask = (taskMock) => {
       tasksContainer.replaceChild(task.getElement(), taskEdit.getElement());
       document.removeEventListener(`keydown`, onEscKeyDown);
     });
-
-  render(tasksContainer, task.getElement(), Position.BEFOREEND);
+  return task.getElement();
 };
 /**
- * Функция возращает html елемент контейнера для board.
- * @param {array} mockData
+ * Функция возращает разметку шаблона для board.
+ *
  * @return {string} разметку шаблона
  */
 const compileBoardTemplate = () =>
@@ -91,7 +89,7 @@ render(main, search.getElement());
 render(main, filters.getElement());
 render(main, createElement(compileBoardTemplate()));
 const tasksContainer = document.querySelector(`.board__tasks`);
-render(tasksContainer, createTasks(firstPartMockData, сreateTask));
+makeTasks(firstPartMockData, сreateTask, tasksContainer);
 let clickCounter = 1;
 const loadMoreBtn = document.querySelector(`.load-more`);
 const onLoadMoreTasks = () => {
@@ -100,9 +98,9 @@ const onLoadMoreTasks = () => {
   if (Math.ceil(tasksData.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
     loadMoreBtn.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
     loadMoreBtn.removeEventListener(`click`, onLoadMoreTasks);
-    render(tasksContainer, createElement(createTasks(nextData, сreateTask)));
+    makeTasks(nextData, сreateTask, tasksContainer);
   }
-  render(tasksContainer, createElement(createTasks(nextData, сreateTask)));
+  makeTasks(nextData, сreateTask, tasksContainer);
 };
 
 loadMoreBtn.addEventListener(`click`, onLoadMoreTasks);
