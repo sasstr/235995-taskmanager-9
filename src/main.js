@@ -25,8 +25,6 @@ const tasksAmount = getRandomInteger(MIN_TASKS_ON_PAGE, MAX_TASKS_ON_PAGE);
 const tasksData = createTasksArray(getTaskData, tasksAmount);
 const firstPartMockData = tasksData.slice(0, TASKS_AMOUNT_ON_PAGE);
 const amountFilters = getAmountFilters(tasksData);
-
-const noTasks = new NoTasks();
 const menu = new Menu(getMenuData());
 const search = new Search();
 const sort = new Sort(getSorts());
@@ -80,17 +78,45 @@ const сreateTask = (taskMock) => {
  */
 const compileBoardTemplate = () =>
   `<section class="board container">
-    ${sort.getTemplate()}
+    ${(tasksData && tasksData.length > 0) ? sort.getTemplate() : ``}
     <div class="board__tasks">
     </div>
     ${button.getTemplate()}
   </section>`.trim();
 
+
+/* const renderTasks = () => {
+  if (!tasksData || tasksData.length === 0) {
+    const noTasks = new NoTasks();
+    render(tasksContainer, noTasks.getElement());
+  }
+  makeTasks(firstPartMockData, сreateTask, tasksContainer);
+  let clickCounter = 1;
+  const loadMoreBtn = document.querySelector(`.load-more`);
+  const onLoadMoreTasks = () => {
+    ++clickCounter;
+    const nextData = tasksData.slice((clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * (clickCounter));
+    if (Math.ceil(tasksData.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
+      loadMoreBtn.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
+      loadMoreBtn.removeEventListener(`click`, onLoadMoreTasks);
+      makeTasks(nextData, сreateTask, tasksContainer);
+    }
+    makeTasks(nextData, сreateTask, tasksContainer);
+  };
+  loadMoreBtn.addEventListener(`click`, onLoadMoreTasks);
+}; */
+
+
 render(mainControl, menu.getElement());
 render(main, search.getElement());
 render(main, filters.getElement());
 render(main, createElement(compileBoardTemplate()));
+
 const tasksContainer = document.querySelector(`.board__tasks`);
+if (!tasksData || tasksData.length === 0) {
+  const noTasks = new NoTasks();
+  render(tasksContainer, noTasks.getElement());
+}
 makeTasks(firstPartMockData, сreateTask, tasksContainer);
 let clickCounter = 1;
 const loadMoreBtn = document.querySelector(`.load-more`);
