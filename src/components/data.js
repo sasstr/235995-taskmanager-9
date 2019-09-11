@@ -74,7 +74,7 @@ const createTasksArray = (makeTaskData, tasksNumberOnPage) => {
   return new Array(tasksNumberOnPage).fill(``)
                                     .map(makeTaskData);
 };
-// return new Array(tasksNumberOnPage).fill(``).map(makeTaskData);
+
 const getAmountFilters = (data) => {
   const filterCounter = {
     all: data.length,
