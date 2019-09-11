@@ -1,12 +1,24 @@
-/**
- * Функция возращает html разметку сортировки.
- * @return {string}
- */
-const makeSortTemplate = () =>
-  `<div class="board__filter-list">
-    <a href="#" class="board__filter">SORT BY DEFAULT</a>
-    <a href="#" class="board__filter">SORT BY DATE up</a>
-    <a href="#" class="board__filter">SORT BY DATE down</a>
-  </div>`.trim();
+import {createElement} from './util';
 
-export {makeSortTemplate};
+export default class Sort {
+  constructor(sortsData) {
+    this._sortsData = sortsData;
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+
+  getTemplate() {
+    return `<div class="board__filter-list">${this._sortsData.map((sort) =>
+      `<a href="#" class="board__filter">${sort}</a>`).join(``)}
+  </div>`.trim();
+  }
+}
