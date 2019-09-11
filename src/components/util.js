@@ -1,21 +1,35 @@
 const MIN_TAGS_AMOUNT = 0;
 const MAX_TAGS_AMOUNT = 3;
-
+const Position = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
 /**
  * Функция рендерит разметку.
  * @param {node} container элемент в который добавляется разметка из cb.
- * @param {string} markup функция которая возращает разметку, которая добавляется в container.
- * @return {void}
+ * @param {node} element функция которая возращает елемент, которая добавляется в container.
+ * @param {string} place позиция добавления в верстку.
+ * @return {void} Добавляет элементы в верстку
  */
-const renderTemplate = (container, markup) => container.insertAdjacentHTML(`beforeend`, markup);
+const render = (container, element, place = Position.BEFOREEND) => {
+  switch (place) {
+    case Position.AFTERBEGIN:
+      container.prepend(element);
+      break;
+    case Position.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+// функция удаляет элемент из разметки
+const unrender = (element) => {
+  if (element) {
+    element.remove();
+  }
+};
 
-/**
- * Функция возращает разметку карточек задач.
- * @param {object} taskData моковые данные для карточки задачи.
- * @param {function} makeTaskTemp Функция, которая возращает разметку компонента задачи.
- * @return {string}
- */
-const createTasksMock = (taskData, makeTaskTemp) => taskData.map(makeTaskTemp).join(``);
+// Функция добавляет к элементу контейнеру элементы таски
+const makeTasks = (MockTasks, makeTask, elemContainer) => MockTasks.forEach((task) => elemContainer.append(makeTask(task)));
 
 /** Функция возращает случайное логическое значение true или false.
  *  @return {boolean} логическое значение true или false.
@@ -46,9 +60,28 @@ const shuffleElemetsOfArray = (array) => {
   return cloneArray;
 };
 
-export {getTagsArray};
-export {shuffleElemetsOfArray};
-export {randomBoolean};
-export {getRandomInteger};
-export {createTasksMock};
-export {renderTemplate};
+/** Функция возращает случайный элемент массива
+ *
+ * @param {array} array массив
+ * @return {mix} случайный элемент массива
+ */
+const getRendomItemOfArray = (array) => array[getRandomInteger(0, array.length)];
+
+// Функция создает DOM элемент DIV и в него помещает переданную разметку.
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+  return newElement.firstChild;
+};
+
+export {
+  createElement,
+  getTagsArray,
+  getRandomInteger,
+  getRendomItemOfArray,
+  makeTasks,
+  render,
+  randomBoolean,
+  shuffleElemetsOfArray,
+  unrender
+};

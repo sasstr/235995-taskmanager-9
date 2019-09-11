@@ -1,4 +1,8 @@
-import {getTagsArray, randomBoolean, shuffleElemetsOfArray, getRandomInteger} from './util';
+import {getTagsArray,
+  randomBoolean,
+  shuffleElemetsOfArray,
+  getRendomItemOfArray
+} from './util';
 
 const Unit = {
   week: 7,
@@ -8,12 +12,22 @@ const Unit = {
   second: 1000
 };
 
-const getTaskMockData = () => ({
-  description: [
-    `Изучить теорию`,
-    `Сделать домашку`,
-    `Пройти интенсив на соточку`,
-  ][Math.floor(Math.random() * 3)],
+const description = [
+  `Изучить теорию`,
+  `Сделать домашку`,
+  `Пройти интенсив на соточку`,
+];
+
+const colors = [
+  `black`,
+  `blue`,
+  `yellow`,
+  `green`,
+  `pink`,
+];
+
+const getTaskData = () => ({
+  description: getRendomItemOfArray(description),
   dueDate: Date.now() + 1 + Math.floor(Math.random() * Unit.week) * Unit.day * Unit.hour * Unit.minute * Unit.second,
   tags: new Set([
     `homework`,
@@ -40,17 +54,12 @@ const getTaskMockData = () => ({
     'sa': false,
     'su': false,
   },
-  color: [
-    `black`,
-    `blue`,
-    `yellow`,
-    `green`,
-    `pink`,
-  ][Math.floor(Math.random() * 5)],
+  colors,
+  color: getRendomItemOfArray(colors),
   get isFavorite() {
     return randomBoolean();
   },
-  get isArchive() {
+  isArchive() {
     return Date.now() > this.dueDate ? true : false;
   },
 });
@@ -61,12 +70,9 @@ const getTaskMockData = () => ({
  * @param {numder} tasksNumberOnPage кол-во тасков
  * @return {array} возращает массив объектов с моковыми данными тасков
  */
-const createTasksMockArray = (makeTaskData, tasksNumberOnPage) => {
-  const tasksArray = [];
-  for (let i = 0; i < tasksNumberOnPage; i++) {
-    tasksArray.push(makeTaskData());
-  }
-  return tasksArray;
+const createTasksArray = (makeTaskData, tasksNumberOnPage) => {
+  return new Array(tasksNumberOnPage).fill(``)
+                                    .map(makeTaskData);
 };
 
 const getAmountFilters = (data) => {
@@ -93,7 +99,7 @@ const getAmountFilters = (data) => {
     if (changeTimeToDate(task.dueDate) === changeTimeToDate(Date.now())) {
       filterCounter.today++;
     }
-    if (task.tagsList.size > 0) {
+    if (task.tagsList.length > 0) {
       filterCounter.tags++;
     }
     if (task.isArchive) {
@@ -137,4 +143,35 @@ const getfilterData = (filterCount) => ([
   },
 ]);
 
-export {getTaskMockData, createTasksMockArray, getfilterData, getAmountFilters};
+const getSorts = () => [
+  `SORT BY DEFAULT`,
+  `SORT BY DATE up`,
+  `SORT BY DATE down`
+];
+
+const getMenuData = () => [
+  {
+    id: `new-task`,
+    name: `+ ADD NEW TASK`,
+    isChecked: false,
+  },
+  {
+    id: `task`,
+    name: `TASKS`,
+    isChecked: true,
+  },
+  {
+    id: `statistic`,
+    name: `STATISTICS`,
+    isChecked: false,
+  }
+];
+
+export {
+  getTaskData,
+  createTasksArray,
+  getfilterData,
+  getAmountFilters,
+  getSorts,
+  getMenuData
+};
