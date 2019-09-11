@@ -15,6 +15,7 @@ import Sort from './components/sort';
 import Card from './components/card';
 import CardEdit from './components/card-edit';
 import Button from './components/button';
+import NoTasks from './components/no-tasks';
 
 const MIN_TASKS_ON_PAGE = 12;
 const MAX_TASKS_ON_PAGE = 43;
@@ -25,6 +26,7 @@ const tasksData = createTasksArray(getTaskData, tasksAmount);
 const firstPartMockData = tasksData.slice(0, TASKS_AMOUNT_ON_PAGE);
 const amountFilters = getAmountFilters(tasksData);
 
+const noTasks = new NoTasks();
 const menu = new Menu(getMenuData());
 const search = new Search();
 const sort = new Sort(getSorts());
@@ -34,7 +36,7 @@ const filters = new Filters(getfilterData(amountFilters));
 const main = document.querySelector(`.main`);
 const mainControl = main.querySelector(`.main__control`);
 
-// Функция возращает инстанс таски
+// Функция возращает элемент таски
 const сreateTask = (taskMock) => {
   const task = new Card(taskMock);
   const taskEdit = new CardEdit(taskMock);
