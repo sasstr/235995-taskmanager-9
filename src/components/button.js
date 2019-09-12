@@ -1,6 +1,10 @@
 import {createElement} from './util';
 
 export default class Button {
+  constructor(amountTasks) {
+    this._amountTasks = amountTasks;
+    this._element = null;
+  }
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
@@ -13,6 +17,6 @@ export default class Button {
   }
 
   getTemplate() {
-    return `<button class="load-more" type="button">load more</button>`.trim();
+    return `${this._amountTasks > 0 ? `<button class="load-more" type="button">load more</button>` : ``}`;
   }
 }

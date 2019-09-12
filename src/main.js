@@ -17,8 +17,8 @@ import CardEdit from './components/card-edit';
 import Button from './components/button';
 import NoTasks from './components/no-tasks';
 
-const MIN_TASKS_ON_PAGE = 12;
-const MAX_TASKS_ON_PAGE = 43;
+const MIN_TASKS_ON_PAGE = 0;
+const MAX_TASKS_ON_PAGE = 30;
 const TASKS_AMOUNT_ON_PAGE = 8;
 
 const tasksAmount = getRandomInteger(MIN_TASKS_ON_PAGE, MAX_TASKS_ON_PAGE);
@@ -28,13 +28,18 @@ const amountFilters = getAmountFilters(tasksData);
 const menu = new Menu(getMenuData());
 const search = new Search();
 const sort = new Sort(getSorts());
-const button = new Button();
+const button = new Button(tasksData.length);
 const filters = new Filters(getfilterData(amountFilters));
 
 const main = document.querySelector(`.main`);
 const mainControl = main.querySelector(`.main__control`);
 
-// Функция возращает элемент таски
+
+/** Функция возращает элемент таски
+ *
+ * @param {object} taskMock объект моковых данных таски
+ * @return {node} возращает элемент таски
+ */
 const сreateTask = (taskMock) => {
   const task = new Card(taskMock);
   const taskEdit = new CardEdit(taskMock);
@@ -84,51 +89,52 @@ const compileBoardTemplate = () =>
     ${button.getTemplate()}
   </section>`.trim();
 
-
-/* const renderTasks = () => {
-  if (!tasksData || tasksData.length === 0) {
-    const noTasks = new NoTasks();
-    render(tasksContainer, noTasks.getElement());
-  }
-  makeTasks(firstPartMockData, сreateTask, tasksContainer);
-  let clickCounter = 1;
-  const loadMoreBtn = document.querySelector(`.load-more`);
-  const onLoadMoreTasks = () => {
-    ++clickCounter;
-    const nextData = tasksData.slice((clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * (clickCounter));
-    if (Math.ceil(tasksData.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
-      loadMoreBtn.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
-      loadMoreBtn.removeEventListener(`click`, onLoadMoreTasks);
-      makeTasks(nextData, сreateTask, tasksContainer);
-    }
-    makeTasks(nextData, сreateTask, tasksContainer);
-  };
-  loadMoreBtn.addEventListener(`click`, onLoadMoreTasks);
-}; */
-
-
 render(mainControl, menu.getElement());
 render(main, search.getElement());
 render(main, filters.getElement());
 render(main, createElement(compileBoardTemplate()));
 
 const tasksContainer = document.querySelector(`.board__tasks`);
-if (!tasksData || tasksData.length === 0) {
+
+// Отрисовывает первую партию тасков на странице.
+makeTasks(firstPartMockData, сreateTask, tasksContainer);
+
+/** Удаляет из разметки кнопку подгрузки тасков
+ *
+ * @param {node} btnElement элемент кнопки
+ * @param {function} onLoadMore функция для слушетеля событий на кнопке
+ *
+ * @return {void}
+ */
+const removeBtnLoadMore = (btnElement, onLoadMore) => {
+  btnElement.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
+  btnElement.removeEventListener(`click`, onLoadMore);
+};
+
+if (!tasksData || tasksData.length < 1) {
   const noTasks = new NoTasks();
   render(tasksContainer, noTasks.getElement());
 }
-makeTasks(firstPartMockData, сreateTask, tasksContainer);
-let clickCounter = 1;
-const loadMoreBtn = document.querySelector(`.load-more`);
-const onLoadMoreTasks = () => {
-  ++clickCounter;
-  const nextData = tasksData.slice((clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * (clickCounter));
-  if (Math.ceil(tasksData.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
-    loadMoreBtn.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
-    loadMoreBtn.removeEventListener(`click`, onLoadMoreTasks);
-    makeTasks(nextData, сreateTask, tasksContainer);
-  }
-  makeTasks(nextData, сreateTask, tasksContainer);
-};
+if (tasksData.length > 0) {
+  const loadMoreBtn = document.querySelector(`.load-more`);
 
-loadMoreBtn.addEventListener(`click`, onLoadMoreTasks);
+  let clickCounter = 1;
+  const onLoadMoreTasks = () => {
+    ++clickCounter;
+    const nextData = tasksData.slice((clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * (clickCounter));
+
+    if (Math.ceil(tasksData.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
+      removeBtnLoadMore(loadMoreBtn, onLoadMoreTasks);
+      makeTasks(nextData, сreateTask, tasksContainer);
+      return;
+    }
+    makeTasks(nextData, сreateTask, tasksContainer);
+  };
+
+  // Скрыть кнопку подгрузки тасков если их меньше чем должно быть на странице.
+  if (tasksData.length <= TASKS_AMOUNT_ON_PAGE) {
+    removeBtnLoadMore(loadMoreBtn, onLoadMoreTasks);
+  }
+
+  loadMoreBtn.addEventListener(`click`, onLoadMoreTasks);
+}
