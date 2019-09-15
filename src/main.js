@@ -14,7 +14,6 @@ import Filters from './components/filters';
 import Sort from './components/sort';
 import Card from './components/card';
 import CardEdit from './components/card-edit';
-import Button from './components/button';
 import NoTasks from './components/no-tasks';
 
 const MIN_TASKS_ON_PAGE = 0;
@@ -24,11 +23,11 @@ const TASKS_AMOUNT_ON_PAGE = 8;
 const tasksAmount = getRandomInteger(MIN_TASKS_ON_PAGE, MAX_TASKS_ON_PAGE);
 const tasksData = createTasksArray(getTaskData, tasksAmount);
 const firstPartMockData = tasksData.slice(0, TASKS_AMOUNT_ON_PAGE);
+
 const amountFilters = getAmountFilters(tasksData);
 const menu = new Menu(getMenuData());
 const search = new Search();
 const sort = new Sort(getSorts());
-const button = new Button(tasksData.length);
 const filters = new Filters(getfilterData(amountFilters));
 
 const main = document.querySelector(`.main`);
@@ -78,7 +77,7 @@ const сreateTask = (taskMock) => {
 };
 /**
  * Функция возращает разметку шаблона для board.
- *
+ * @param {number} amountTasks количество тасков
  * @return {string} разметку шаблона
  */
 const compileBoardTemplate = () =>
@@ -86,18 +85,8 @@ const compileBoardTemplate = () =>
     ${(tasksData && tasksData.length > 0) ? sort.getTemplate() : ``}
     <div class="board__tasks">
     </div>
-    ${button.getTemplate()}
+    ${tasksData.length > 0 ? `<button class="load-more" type="button">load more</button>` : ``}
   </section>`.trim();
-
-render(mainControl, menu.getElement());
-render(main, search.getElement());
-render(main, filters.getElement());
-render(main, createElement(compileBoardTemplate()));
-
-const tasksContainer = document.querySelector(`.board__tasks`);
-
-// Отрисовывает первую партию тасков на странице.
-makeTasks(firstPartMockData, сreateTask, tasksContainer);
 
 /** Удаляет из разметки кнопку подгрузки тасков
  *
@@ -111,30 +100,45 @@ const removeBtnLoadMore = (btnElement, onLoadMore) => {
   btnElement.removeEventListener(`click`, onLoadMore);
 };
 
-if (!tasksData || tasksData.length < 1) {
-  const noTasks = new NoTasks();
-  render(tasksContainer, noTasks.getElement());
-}
-if (tasksData.length > 0) {
+/** Функция отрисует шаблон noTasks если нет созданных тасков.
+ *
+ * @param {Array} mockTasks Массив с моковыми данными тасков
+ * @param {node} container контейнер для тасков
+ * @return {void} Отрисует шаблон noTasks если нет созданных тасков.
+ */
+const renderTasksTemplate = (mockTasks, container) => {
+  if (!mockTasks || mockTasks.length < 1) {
+    const noTasks = new NoTasks();
+    render(container, noTasks.getElement());
+    return;
+  }
+  makeTasks(firstPartMockData, сreateTask, container);
   const loadMoreBtn = document.querySelector(`.load-more`);
 
   let clickCounter = 1;
   const onLoadMoreTasks = () => {
     ++clickCounter;
-    const nextData = tasksData.slice((clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * (clickCounter));
+    const nextData = mockTasks.slice((clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * (clickCounter));
 
-    if (Math.ceil(tasksData.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
+    if (Math.ceil(mockTasks.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
       removeBtnLoadMore(loadMoreBtn, onLoadMoreTasks);
-      makeTasks(nextData, сreateTask, tasksContainer);
+      makeTasks(nextData, сreateTask, container);
       return;
     }
-    makeTasks(nextData, сreateTask, tasksContainer);
+    makeTasks(nextData, сreateTask, container);
   };
 
   // Скрыть кнопку подгрузки тасков если их меньше чем должно быть на странице.
-  if (tasksData.length <= TASKS_AMOUNT_ON_PAGE) {
+  if (mockTasks.length <= TASKS_AMOUNT_ON_PAGE) {
     removeBtnLoadMore(loadMoreBtn, onLoadMoreTasks);
   }
 
   loadMoreBtn.addEventListener(`click`, onLoadMoreTasks);
-}
+};
+
+render(mainControl, menu.getElement());
+render(main, search.getElement());
+render(main, filters.getElement());
+render(main, createElement(compileBoardTemplate()));
+const tasksContainer = document.querySelector(`.board__tasks`);
+renderTasksTemplate(tasksData, tasksContainer);
