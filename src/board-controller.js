@@ -1,14 +1,12 @@
 import {
-  createElement,
   makeTasks,
   render} from './components/util';
-import {getSorts} from './components/data';
+import Board from './components/board';
 import Card from './components/card';
 import CardEdit from './components/card-edit';
 import NoTasks from './components/no-tasks';
-import Sort from './components/sort';
 
-const sort = new Sort(getSorts());
+const TASKS_AMOUNT_ON_PAGE = 8;
 
 export default class BoardController {
   constructor(container, tasks, tasksAmount) {
@@ -17,70 +15,46 @@ export default class BoardController {
     this._tasksAmount = tasksAmount;
   }
 
-  /** Метод возращает элемент таски
+  /** Метод возращает элемент таск
    *
    * @param {object} taskMock объект моковых данных таски
    * @return {node} возращает элемент таски
    */
   _сreateTask(taskMock) {
     const task = new Card(taskMock);
-    const taskEdit = new CardEdit(taskMock);
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        taskEdit.getElement().parentNode.replaceChild(task.getElement(), taskEdit.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
     task.getElement()
       .querySelector(`.card__btn--edit`)
       .addEventListener(`click`, () => {
+        const taskEdit = new CardEdit(taskMock);
+        const onEscKeyDown = (evt) => {
+          if (evt.key === `Escape` || evt.key === `Esc`) {
+            taskEdit.getElement().parentNode.replaceChild(task.getElement(), taskEdit.getElement());
+            document.removeEventListener(`keydown`, onEscKeyDown);
+          }
+        };
+
         task.getElement().parentNode.replaceChild(taskEdit.getElement(), task.getElement());
         document.addEventListener(`keydown`, onEscKeyDown);
+
+        taskEdit.getElement().querySelector(`textarea`)
+        .addEventListener(`focus`, () => {
+          document.removeEventListener(`keydown`, onEscKeyDown);
+        });
+
+        taskEdit.getElement().querySelector(`textarea`)
+        .addEventListener(`blur`, () => {
+          document.addEventListener(`keydown`, onEscKeyDown);
+        });
+
+        taskEdit.getElement()
+        .querySelector(`.card__save`)
+        .addEventListener(`click`, () => {
+          taskEdit.getElement().parentNode.replaceChild(task.getElement(), taskEdit.getElement());
+          document.removeEventListener(`keydown`, onEscKeyDown);
+        });
       });
 
-    taskEdit.getElement().querySelector(`textarea`)
-      .addEventListener(`focus`, () => {
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
-
-    taskEdit.getElement().querySelector(`textarea`)
-      .addEventListener(`blur`, () => {
-        document.addEventListener(`keydown`, onEscKeyDown);
-      });
-
-    taskEdit.getElement()
-      .querySelector(`.card__save`)
-      .addEventListener(`click`, () => {
-        taskEdit.getElement().parentNode.replaceChild(task.getElement(), taskEdit.getElement());
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
     return task.getElement();
-  }
-
-  _isSortTemplate(tasks) {
-    return tasks && tasks.length > 0 ? sort.getTemplate() : ``;
-  }
-
-  _isLoadMoreButton(tasksInfo) {
-    return tasksInfo.length > 0 ?
-      `<button class="load-more" type="button">load more</button>`
-      : ``;
-  }
-
-  /**
-   * Метод возращает разметку шаблона для board.
-   * @param {array} tasksMock количество тасков
-   * @return {string} разметку шаблона
-   */
-  _compileBoardTemplate(tasksMock) {
-    return `<section class="board container">
-      ${this._isSortTemplate(tasksMock)}
-    <div class="board__tasks">
-    </div>
-      ${this._isLoadMoreButton(tasksMock)}
-    </section>`.trim();
   }
 
   init() {
@@ -89,11 +63,11 @@ export default class BoardController {
       render(this._container, noTasks.getElement());
       return;
     }
-    const TASKS_AMOUNT_ON_PAGE = 8;
     const main = document.querySelector(`.main`);
     const firstPartMockData = this._tasks.slice(0, TASKS_AMOUNT_ON_PAGE);
+    const board = new Board(this._tasks);
 
-    render(main, createElement(this._compileBoardTemplate(this._tasks)));
+    render(main, board.getElement());
     const tasksContainer = document.querySelector(`.board__tasks`);
     // Отрисовывает первую партию тасков на странице.
     makeTasks(firstPartMockData, this._сreateTask, tasksContainer);
