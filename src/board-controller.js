@@ -66,6 +66,11 @@ export default class BoardController {
   _sortByDateDown() {
     return this._tasks.slice().sort((a, b) => b.dueDate - a.dueDate);
   }
+  // Метод отрисует отсортированные таски.
+  _renderSortedTasks(sortedTasks, tasksBoard) {
+    sortedTasks.slice(0, TASKS_AMOUNT_ON_PAGE)
+    .forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock)));
+  }
   // Функция слушатель события клик на элементах сортировки.
   _onSortLinkClick(evt) {
     evt.preventDefault();
@@ -78,23 +83,16 @@ export default class BoardController {
 
     switch (evt.target.dataset.sortType) {
       case `date-up`:
-        this._sortByDateUp()
-            .slice(0, TASKS_AMOUNT_ON_PAGE)
-            .forEach((taskMock) => render(tasksList, this._сreateTask(taskMock)));
+        this._renderSortedTasks(this._sortByDateUp(), tasksList);
         break;
       case `date-down`:
-        this._sortByDateDown()
-            .slice(0, TASKS_AMOUNT_ON_PAGE)
-            .forEach((taskMock) => render(tasksList, this._сreateTask(taskMock)));
+        this._renderSortedTasks(this._sortByDateDown(), tasksList);
         break;
       case `default`:
-        this._tasks
-            .slice(0, TASKS_AMOUNT_ON_PAGE)
-            .forEach((taskMock) => render(tasksList, this._сreateTask(taskMock)));
+        this._renderSortedTasks(this._tasks, tasksList);
         break;
     }
   }
-
 
   init() {
     if (!this._tasks || this._tasks.length < 1) {
