@@ -11,7 +11,7 @@ import Search from './components/search';
 import Filters from './components/filters';
 
 const MIN_TASKS_ON_PAGE = 0;
-const MAX_TASKS_ON_PAGE = 30;
+const MAX_TASKS_ON_PAGE = 20;
 
 const tasksAmount = getRandomInteger(MIN_TASKS_ON_PAGE, MAX_TASKS_ON_PAGE);
 const tasksData = createTasksArray(getTaskData, tasksAmount);

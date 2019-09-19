@@ -95,12 +95,12 @@ export default class BoardController {
   }
 
   init() {
+    const main = document.querySelector(`.main`);
     if (!this._tasks || this._tasks.length < 1) {
       const noTasks = new NoTasks();
-      render(this._container, noTasks.getElement());
+      render(main, noTasks.getElement());
       return;
     }
-    const main = document.querySelector(`.main`);
     const firstPartMockData = this._tasks.slice(0, TASKS_AMOUNT_ON_PAGE);
 
     const sort = new Sort(getSorts());
