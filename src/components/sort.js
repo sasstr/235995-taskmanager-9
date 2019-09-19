@@ -9,7 +9,7 @@ export default class Sort extends AbstractComponent {
 
   getTemplate() {
     return `<div class="board__filter-list">${this._sortsData.map((sort) =>
-      `<a href="#" class="board__filter">${sort}</a>`).join(``)}
+      `<a href="#" class="board__filter" ${sort.sortType}> ${sort.title}</a>`).join(``)}
   </div>`.trim();
   }
 }

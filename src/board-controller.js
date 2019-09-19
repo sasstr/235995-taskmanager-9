@@ -1,6 +1,8 @@
 import {
   makeTasks,
   render} from './components/util';
+import {getSorts} from './components/data';
+import Sort from './components/sort';
 import Board from './components/board';
 import Card from './components/card';
 import CardEdit from './components/card-edit';
@@ -56,6 +58,43 @@ export default class BoardController {
 
     return task.getElement();
   }
+  // Сортирует задачи по дате от самой ранней к самой поздней.
+  _sortByDateUp() {
+    return this._tasks.slice().sort((a, b) => a.dueDate - b.dueDate);
+  }
+  // Сортирует задачи по дате от самой поздней к самой ранней.
+  _sortByDateDown() {
+    return this._tasks.slice().sort((a, b) => b.dueDate - a.dueDate);
+  }
+  // Функция слушатель события клик на элементах сортировки.
+  _onSortLinkClick(evt) {
+    evt.preventDefault();
+
+    if (evt.target.tagName !== `A`) {
+      return;
+    }
+    const tasksList = document.querySelector(`.board__tasks`);
+    tasksList.innerHTML = ``;
+
+    switch (evt.target.dataset.sortType) {
+      case `date-up`:
+        this._sortByDateUp()
+            .slice(0, TASKS_AMOUNT_ON_PAGE)
+            .forEach((taskMock) => render(tasksList, this._сreateTask(taskMock)));
+        break;
+      case `date-down`:
+        this._sortByDateDown()
+            .slice(0, TASKS_AMOUNT_ON_PAGE)
+            .forEach((taskMock) => render(tasksList, this._сreateTask(taskMock)));
+        break;
+      case `default`:
+        this._tasks
+            .slice(0, TASKS_AMOUNT_ON_PAGE)
+            .forEach((taskMock) => render(tasksList, this._сreateTask(taskMock)));
+        break;
+    }
+  }
+
 
   init() {
     if (!this._tasks || this._tasks.length < 1) {
@@ -65,10 +104,16 @@ export default class BoardController {
     }
     const main = document.querySelector(`.main`);
     const firstPartMockData = this._tasks.slice(0, TASKS_AMOUNT_ON_PAGE);
-    const board = new Board(this._tasks);
+
+    const sort = new Sort(getSorts());
+    const board = new Board(this._tasks, sort);
 
     render(main, board.getElement());
+    const boardFilterList = document.querySelector(`.board__filter-list`);
+
+    boardFilterList.addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
     const tasksContainer = document.querySelector(`.board__tasks`);
+
     // Отрисовывает первую партию тасков на странице.
     makeTasks(firstPartMockData, this._сreateTask, tasksContainer);
 
@@ -98,9 +143,9 @@ export default class BoardController {
       }
       makeTasks(nextData, this._сreateTask, tasksContainer);
     };
-
+    const cardsAmount = document.querySelectorAll(`.card`);
     // Скрыть кнопку подгрузки тасков если их меньше чем должно быть на странице.
-    if (this._tasks.length <= TASKS_AMOUNT_ON_PAGE) {
+    if (this._tasks.length === cardsAmount.length || this._tasks.length <= TASKS_AMOUNT_ON_PAGE) {
       removeBtnLoadMore(loadMoreBtn, onLoadMoreTasks);
     }
 
