@@ -112,7 +112,7 @@ const getAmountFilters = (data) => {
   return filterCounter;
 };
 
-const getfilterData = (filterCount) => ([
+const getfilterData = (filterCount) => [
   {
     title: `all`,
     count: filterCount.all,
@@ -141,12 +141,21 @@ const getfilterData = (filterCount) => ([
     title: `archive`,
     count: filterCount.archive,
   },
-]);
+];
 
 const getSorts = () => [
-  `SORT BY DEFAULT`,
-  `SORT BY DATE up`,
-  `SORT BY DATE down`
+  {
+    title: `SORT BY DEFAULT`,
+    sortType: `data-sort-type="default"`
+  },
+  {
+    title: `SORT BY DATE up`,
+    sortType: `data-sort-type="date-up"`
+  },
+  {
+    title: `SORT BY DATE down`,
+    sortType: `data-sort-type="date-down"`
+  }
 ];
 
 const getMenuData = () => [

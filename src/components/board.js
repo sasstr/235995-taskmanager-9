@@ -1,13 +1,11 @@
 import AbstractComponent from './abstract-component';
-import {getSorts} from './data';
-import Sort from './sort';
 
 export default class Board extends AbstractComponent {
-  constructor(tasks) {
+  constructor(tasks, sort) {
     super();
 
     this._tasks = tasks;
-    this._sort = new Sort(getSorts());
+    this._sort = sort;
   }
 
   _isTasks(tasks) {
