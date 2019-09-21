@@ -17,6 +17,14 @@ export default class BoardController {
     this._tasksAmount = tasksAmount;
   }
 
+  onDataChange() {
+    /* @TODO
+     метод onDataChange, который получает на вход обновленные данные задачи
+     ( все целиком, даже те поля, которые не изменились ) и изменяет их в моках.
+     Передайте этот метод в TaskController ( не забудьте привязать контекст ).
+    */
+  }
+
   /** Метод возращает элемент таск
    *
    * @param {object} taskMock объект моковых данных таски
@@ -49,11 +57,35 @@ export default class BoardController {
         });
 
         taskEdit.getElement()
-        .querySelector(`.card__save`)
-        .addEventListener(`click`, () => {
-          taskEdit.getElement().parentNode.replaceChild(task.getElement(), taskEdit.getElement());
-          document.removeEventListener(`keydown`, onEscKeyDown);
-        });
+      .querySelector(`.card__save`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+
+        const formData = new FormData(taskEdit.getElement().querySelector(`.card__form`));
+
+        const entry = {
+          description: formData.get(`text`),
+          color: formData.get(`color`),
+          tags: new Set(formData.getAll(`hashtag`)),
+          dueDate: new Date(formData.get(`date`)),
+          repeatingDays: formData.getAll(`repeat`).reduce((acc, it) => {
+            acc[it] = true;
+            return acc;
+          }, {
+            'mo': false,
+            'to': false,
+            'we': false,
+            'th': false,
+            'fr': false,
+            'sa': false,
+            'su': false,
+          })
+        };
+        console.log(entry);
+        this._tasks[this._tasks.findIndex((it) => it === taskMock)] = entry;
+
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      });
       });
 
     return task.getElement();
@@ -126,11 +158,12 @@ export default class BoardController {
       btnElement.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
       btnElement.removeEventListener(`click`, onLoadMore);
     };
+
     const loadMoreBtn = document.querySelector(`.load-more`);
-
     let clickCounter = 1;
-    const onLoadMoreTasks = () => {
 
+    // Функция обработчик события клик на кнопке loadMoreBtn
+    const onLoadMoreTasks = () => {
       ++clickCounter;
       const nextData = this._tasks.slice((clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * (clickCounter));
 

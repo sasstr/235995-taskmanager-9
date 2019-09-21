@@ -18,7 +18,7 @@ export default class CardEdit extends AbstractComponent {
       ${Object.keys(this._repeatingDays).map((day, i) => `<input
       class="visually-hidden card__repeat-day-input"
       type="checkbox"
-      id="repeat-${day}-4"
+      id="repeat-${day}-${i}"
       name="repeat"
       value="${day}"
       ${this._repeatingDays[day] ? `checked` : ``}
