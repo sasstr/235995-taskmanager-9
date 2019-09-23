@@ -1,6 +1,6 @@
 import AbstractComponent from './abstract-component';
 
-export default class Board extends AbstractComponent {
+export default class FullBoard extends AbstractComponent {
   constructor(tasks, sort) {
     super();
 

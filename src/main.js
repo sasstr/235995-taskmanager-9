@@ -5,7 +5,7 @@ import {getTaskData,
   getMenuData} from './components/data';
 import {getRandomInteger,
   render} from './components/util';
-import BoardController from './board-controller';
+import BoardController from './controllers/board';
 import Menu from './components/menu';
 import Search from './components/search';
 import Filters from './components/filters';

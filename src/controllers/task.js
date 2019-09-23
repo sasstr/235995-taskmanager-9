@@ -1,10 +1,10 @@
 import {
   render,
-  unrender} from './components/util';
-import Card from './components/card';
-import CardEdit from './components/card-edit';
+  unrender} from '../components/util';
+import Card from '../components/card';
+import CardEdit from '../components/card-edit';
 
-export default class TaskController {
+export default class Task {
   constructor(container, tasks, onDataChange, onChangeView) {
     this._container = container;
     this._tasks = tasks;

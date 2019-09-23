@@ -1,24 +1,35 @@
 import {
   makeTasks,
   render,
-  unrender} from './components/util';
-import {getSorts} from './components/data';
-import Sort from './components/sort';
-import Board from './components/board';
-import Card from './components/card';
-import CardEdit from './components/card-edit';
-import NoTasks from './components/no-tasks';
+  unrender} from '../components/util';
+import {getSorts} from '../components/data';
+import Sort from '../components/sort';
+import FullBoard from '../components/full-board';
+import Card from '../components/card';
+import CardEdit from '../components/card-edit';
+import NoTasks from '../components/no-tasks';
 
 const TASKS_AMOUNT_ON_PAGE = 8;
 
-export default class BoardController {
+export default class Board {
   constructor(container, tasks, tasksAmount) {
     this._container = container;
     this._tasks = tasks;
     this._tasksAmount = tasksAmount;
   }
 
-  onDataChange() {
+  _renderBoard(tasks) {
+    unrender(this._taskList.getElement());
+
+    this._taskList.removeElement();
+    render(this._board.getElement(), this._taskList.getElement());
+    this._tasks.forEach((taskMock) => this._renderTask(taskMock));
+  }
+
+  onDataChange(newData, oldData) {
+    this._tasks[this._tasks.findIndex((it2) => it2 === oldData)] = newData;
+
+    this._renderBoard(this._tasks);
     /* @TODO
      метод onDataChange, который получает на вход обновленные данные задачи
      ( все целиком, даже те поля, которые не изменились ) и изменяет их в моках.
@@ -128,7 +139,7 @@ export default class BoardController {
   // Метод отрисует отсортированные таски.
   _renderSortedTasks(sortedTasks, tasksBoard) {
     sortedTasks.slice(0, TASKS_AMOUNT_ON_PAGE)
-    .forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock).bind(this)));
+    .forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock)));
   }
   // Функция слушатель события клик на элементах сортировки.
   _onSortLinkClick(evt) {
@@ -163,9 +174,9 @@ export default class BoardController {
     const firstPartMockData = this._tasks.slice(0, TASKS_AMOUNT_ON_PAGE);
 
     const sort = new Sort(getSorts());
-    const board = new Board(this._tasks, sort);
+    const fullBoard = new FullBoard(this._tasks, sort);
 
-    render(main, board.getElement());
+    render(main, fullBoard.getElement());
     const boardFilterList = document.querySelector(`.board__filter-list`);
 
     boardFilterList.addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
