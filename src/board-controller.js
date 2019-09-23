@@ -1,6 +1,7 @@
 import {
   makeTasks,
-  render} from './components/util';
+  render,
+  unrender} from './components/util';
 import {getSorts} from './components/data';
 import Sort from './components/sort';
 import Board from './components/board';
@@ -32,6 +33,7 @@ export default class BoardController {
    */
   _сreateTask(taskMock) {
     const task = new Card(taskMock);
+
     task.getElement()
       .querySelector(`.card__btn--edit`)
       .addEventListener(`click`, () => {
@@ -57,35 +59,60 @@ export default class BoardController {
         });
 
         taskEdit.getElement()
-      .querySelector(`.card__save`)
-      .addEventListener(`click`, (evt) => {
-        evt.preventDefault();
+        .querySelector(`.card__save`)
+        .addEventListener(`click`, (evtEdit) => {
+          evtEdit.preventDefault();
 
-        const formData = new FormData(taskEdit.getElement().querySelector(`.card__form`));
+          const formData = new FormData(taskEdit.getElement().querySelector(`.card__form`));
+          const entry = {
+            color: formData.get(`color`),
+            colors: [
+              `black`,
+              `blue`,
+              `yellow`,
+              `green`,
+              `pink`,
+            ],
+            description: formData.get(`text`),
+            dueDate: new Date(formData.get(`date`)),
+            tagsList: new Set(formData.getAll(`hashtag`)),
+            repeatingDays: formData.getAll(`repeats`).reduce((acc, it) => {
+              acc[it] = true;
+              return acc;
+            }, {
+              'mo': false,
+              'to': false,
+              'we': false,
+              'th': false,
+              'fr': false,
+              'sa': false,
+              'su': false,
+            }),
+            tags: new Set([
+              `homework`,
+              `theory`,
+              `practice`,
+              `intensive`,
+              `keks`,
+              `todo`,
+              `personal`,
+              `important`,
+              `cinema`,
+              `repeat`,
+              `entertaiment`,
+            ]),
+          };
+          this._tasks[this._tasks.findIndex((it) => it === taskMock)] = entry;
+          document.removeEventListener(`keydown`, onEscKeyDown);
 
-        const entry = {
-          description: formData.get(`text`),
-          color: formData.get(`color`),
-          tags: new Set(formData.getAll(`hashtag`)),
-          dueDate: new Date(formData.get(`date`)),
-          repeatingDays: formData.getAll(`repeat`).reduce((acc, it) => {
-            acc[it] = true;
-            return acc;
-          }, {
-            'mo': false,
-            'to': false,
-            'we': false,
-            'th': false,
-            'fr': false,
-            'sa': false,
-            'su': false,
-          })
-        };
-        console.log(entry);
-        this._tasks[this._tasks.findIndex((it) => it === taskMock)] = entry;
+          const cards = document.querySelectorAll(`.card`);
+          Array.from(cards).map((card) => unrender(card));
 
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      });
+          const newTasks = this._tasks.slice(0, TASKS_AMOUNT_ON_PAGE);
+          const container = document.querySelector(`.board__tasks`);
+          newTasks.forEach((newCard) => render(container, this._сreateTask(newCard)));
+        });
+
       });
 
     return task.getElement();
@@ -101,7 +128,7 @@ export default class BoardController {
   // Метод отрисует отсортированные таски.
   _renderSortedTasks(sortedTasks, tasksBoard) {
     sortedTasks.slice(0, TASKS_AMOUNT_ON_PAGE)
-    .forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock)));
+    .forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock).bind(this)));
   }
   // Функция слушатель события клик на элементах сортировки.
   _onSortLinkClick(evt) {
@@ -145,7 +172,7 @@ export default class BoardController {
     const tasksContainer = document.querySelector(`.board__tasks`);
 
     // Отрисовывает первую партию тасков на странице.
-    makeTasks(firstPartMockData, this._сreateTask, tasksContainer);
+    makeTasks(firstPartMockData, this._сreateTask.bind(this), tasksContainer);
 
     /** Удаляет из разметки кнопку подгрузки тасков
      *
@@ -169,10 +196,10 @@ export default class BoardController {
 
       if (Math.ceil(this._tasks.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
         removeBtnLoadMore(loadMoreBtn, onLoadMoreTasks);
-        makeTasks(nextData, this._сreateTask, tasksContainer);
+        makeTasks(nextData, this._сreateTask.bind(this), tasksContainer);
         return;
       }
-      makeTasks(nextData, this._сreateTask, tasksContainer);
+      makeTasks(nextData, this._сreateTask.bind(this), tasksContainer);
     };
     const cardsAmount = document.querySelectorAll(`.card`);
     // Скрыть кнопку подгрузки тасков если их меньше чем должно быть на странице.
@@ -181,6 +208,5 @@ export default class BoardController {
     }
 
     loadMoreBtn.addEventListener(`click`, onLoadMoreTasks);
-
   }
 }

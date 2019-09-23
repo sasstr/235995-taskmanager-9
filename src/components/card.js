@@ -53,10 +53,10 @@ export default class Card extends AbstractComponent {
 
           <div class="card__hashtag">
             <div class="card__hashtag-list">
-                  ${Array.from(this._tagsList).map((tag) => `<span class="card__hashtag-inner">
+                  ${this._tagsList ? Array.from(this._tagsList).map((tag) => `<span class="card__hashtag-inner">
                   <span class="card__hashtag-name">
                     #${tag}</span>
-                  </span>`.trim()).join(``)}
+                  </span>`.trim()).join(``) : ``}
             </div>
           </div>
         </div>

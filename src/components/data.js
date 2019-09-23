@@ -47,7 +47,7 @@ const getTaskData = () => ({
   },
   repeatingDays: {
     'mo': false,
-    'to': randomBoolean(),
+    'to': false,
     'we': false,
     'th': false,
     'fr': false,

@@ -19,7 +19,7 @@ export default class CardEdit extends AbstractComponent {
       class="visually-hidden card__repeat-day-input"
       type="checkbox"
       id="repeat-${day}-${i}"
-      name="repeat"
+      name="repeats"
       value="${day}"
       ${this._repeatingDays[day] ? `checked` : ``}
     />
@@ -33,10 +33,10 @@ export default class CardEdit extends AbstractComponent {
     return `<div class="card__hashtag">
       <div class="card__hashtag-list">
 
-            ${Array.from(this._tags).map((tag) => `<span class="card__hashtag-inner">
+            ${this._tags ? Array.from(this._tags).map((tag) => `<span class="card__hashtag-inner">
           <input
             type="hidden"
-            name="hashtag"
+            name="${tag}"
             value="repeat"
             class="card__hashtag-hidden-input"
           />
@@ -45,7 +45,7 @@ export default class CardEdit extends AbstractComponent {
           <button type="button" class="card__hashtag-delete">
             delete
           </button>
-        </span>`).join(``)}
+        </span>`).join(``) : ``}
           <label>
           <input
             type="text"
@@ -62,19 +62,19 @@ export default class CardEdit extends AbstractComponent {
     return `<div class="card__colors-inner">
       <h3 class="card__colors-title">Color</h3>
       <div class="card__colors-wrap">
-      ${this._colors.map((color) => `<input
+      ${this._colors ? this._colors.map((color, i) => `<input
       type="radio"
-      id="color-${color}-4"
+      id="color-${color}-${i}"
       class="card__color-input card__color-input--${color} visually-hidden"
       name="color"
       value="${color}"
-      checked
+      ${this._color === color ? `checked` : ``}
     />
     <label
-      for="color-${color}-4"
+      for="color-${color}-${i}"
       class="card__color card__color--${color}"
       >${color}</label
-    >`.trim()).join(``)}
+    >`.trim()).join(``) : ``}
       </div>
     </div>`.trim();
   }
@@ -120,7 +120,7 @@ export default class CardEdit extends AbstractComponent {
               class="card__text"
               placeholder="Start typing your text here..."
               name="text"
-            >Here is a card with filled data</textarea>
+            >${this._description ? this._description : `Here is a card with filled data`}</textarea>
           </label>
         </div>
 
