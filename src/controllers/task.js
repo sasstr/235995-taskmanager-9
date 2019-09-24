@@ -1,6 +1,7 @@
 import {
   render,
   unrender} from '../components/util';
+import {getColors} from '../components/data';
 import Card from '../components/card';
 import CardEdit from '../components/card-edit';
 
@@ -8,6 +9,7 @@ export default class Task {
   constructor(container, tasks, onDataChange, onChangeView) {
     this._container = container;
     this._tasks = tasks;
+    this._colors = getColors();
     this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
   }

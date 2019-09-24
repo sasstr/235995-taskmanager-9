@@ -1,15 +1,15 @@
 import AbstractComponent from './abstract-component';
+import {getColors} from '../components/data';
 
 export default class CardEdit extends AbstractComponent {
-  constructor({description, dueDate, tagsList, repeatingDays, color, colors, tags}) {
+  constructor({description, dueDate, repeatingDays, color, tags}) {
     super();
 
-    this._colors = colors;
     this._color = color;
+    this._colors = getColors();
     this._description = description;
     this._dueDate = dueDate;
     this._repeatingDays = repeatingDays;
-    this._tagsList = tagsList;
     this._tags = tags;
   }
 
@@ -19,7 +19,7 @@ export default class CardEdit extends AbstractComponent {
       class="visually-hidden card__repeat-day-input"
       type="checkbox"
       id="repeat-${day}-${i}"
-      name="repeats"
+      name="repeat"
       value="${day}"
       ${this._repeatingDays[day] ? `checked` : ``}
     />
@@ -36,8 +36,8 @@ export default class CardEdit extends AbstractComponent {
             ${this._tags ? Array.from(this._tags).map((tag) => `<span class="card__hashtag-inner">
           <input
             type="hidden"
-            name="${tag}"
-            value="repeat"
+            name="hashtag"
+            value="${tag}"
             class="card__hashtag-hidden-input"
           />
           <p class="card__hashtag-name"> #${tag}

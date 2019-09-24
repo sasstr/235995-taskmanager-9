@@ -18,7 +18,7 @@ const description = [
   `Пройти интенсив на соточку`,
 ];
 
-const colors = [
+const getColors = () => [
   `black`,
   `blue`,
   `yellow`,
@@ -26,42 +26,38 @@ const colors = [
   `pink`,
 ];
 
+const tagsList = new Set([
+  `homework`,
+  `theory`,
+  `practice`,
+  `intensive`,
+  `keks`,
+  `todo`,
+  `personal`,
+  `important`,
+  `cinema`,
+  `repeat`,
+  `entertaiment`,
+]);
+
+const getDueDate = () => Date.now() + 1 + Math.floor(Math.random() * Unit.week) * Unit.day * Unit.hour * Unit.minute * Unit.second;
+
 const getTaskData = () => ({
+  color: getRendomItemOfArray(getColors()),
   description: getRendomItemOfArray(description),
-  dueDate: Date.now() + 1 + Math.floor(Math.random() * Unit.week) * Unit.day * Unit.hour * Unit.minute * Unit.second,
-  tags: new Set([
-    `homework`,
-    `theory`,
-    `practice`,
-    `intensive`,
-    `keks`,
-    `todo`,
-    `personal`,
-    `important`,
-    `cinema`,
-    `repeat`,
-    `entertaiment`,
-  ]),
-  get tagsList() {
-    return getTagsArray(shuffleElemetsOfArray([...this.tags]));
-  },
+  dueDate: getDueDate(),
+  tags: getTagsArray(shuffleElemetsOfArray([...tagsList])),
   repeatingDays: {
     'mo': false,
     'to': false,
     'we': false,
     'th': false,
     'fr': false,
-    'sa': false,
+    'sa': randomBoolean(),
     'su': false,
   },
-  colors,
-  color: getRendomItemOfArray(colors),
-  get isFavorite() {
-    return randomBoolean();
-  },
-  isArchive() {
-    return Date.now() > this.dueDate ? true : false;
-  },
+  favorite: randomBoolean(),
+  archive: randomBoolean(),
 });
 
 /** Функция возращает массив объектов с моковыми данными тасков
@@ -99,7 +95,7 @@ const getAmountFilters = (data) => {
     if (changeTimeToDate(task.dueDate) === changeTimeToDate(Date.now())) {
       filterCounter.today++;
     }
-    if (task.tagsList.length > 0) {
+    if (task.tags.length > 0) {
       filterCounter.tags++;
     }
     if (task.isArchive) {
@@ -143,21 +139,6 @@ const getfilterData = (filterCount) => [
   },
 ];
 
-const getSorts = () => [
-  {
-    title: `SORT BY DEFAULT`,
-    sortType: `data-sort-type="default"`
-  },
-  {
-    title: `SORT BY DATE up`,
-    sortType: `data-sort-type="date-up"`
-  },
-  {
-    title: `SORT BY DATE down`,
-    sortType: `data-sort-type="date-down"`
-  }
-];
-
 const getMenuData = () => [
   {
     id: `new-task`,
@@ -177,10 +158,10 @@ const getMenuData = () => [
 ];
 
 export {
-  getTaskData,
   createTasksArray,
-  getfilterData,
   getAmountFilters,
-  getSorts,
-  getMenuData
+  getColors,
+  getfilterData,
+  getMenuData,
+  getTaskData,
 };

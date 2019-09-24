@@ -2,7 +2,6 @@ import {
   makeTasks,
   render,
   unrender} from '../components/util';
-import {getSorts} from '../components/data';
 import Sort from '../components/sort';
 import FullBoard from '../components/full-board';
 import Card from '../components/card';
@@ -14,27 +13,23 @@ const TASKS_AMOUNT_ON_PAGE = 8;
 export default class Board {
   constructor(container, tasks, tasksAmount) {
     this._container = container;
+    this._clickCounter = 1;
     this._tasks = tasks;
     this._tasksAmount = tasksAmount;
   }
 
-  _renderBoard(tasks) {
+  /* _renderBoard(tasks) {
     unrender(this._taskList.getElement());
 
     this._taskList.removeElement();
     render(this._board.getElement(), this._taskList.getElement());
     this._tasks.forEach((taskMock) => this._renderTask(taskMock));
-  }
+  } */
 
   onDataChange(newData, oldData) {
     this._tasks[this._tasks.findIndex((it2) => it2 === oldData)] = newData;
 
     this._renderBoard(this._tasks);
-    /* @TODO
-     метод onDataChange, который получает на вход обновленные данные задачи
-     ( все целиком, даже те поля, которые не изменились ) и изменяет их в моках.
-     Передайте этот метод в TaskController ( не забудьте привязать контекст ).
-    */
   }
 
   /** Метод возращает элемент таск
@@ -77,16 +72,9 @@ export default class Board {
           const formData = new FormData(taskEdit.getElement().querySelector(`.card__form`));
           const entry = {
             color: formData.get(`color`),
-            colors: [
-              `black`,
-              `blue`,
-              `yellow`,
-              `green`,
-              `pink`,
-            ],
             description: formData.get(`text`),
             dueDate: new Date(formData.get(`date`)),
-            tagsList: new Set(formData.getAll(`hashtag`)),
+            tags: new Set(formData.getAll(`hashtag`)),
             repeatingDays: formData.getAll(`repeats`).reduce((acc, it) => {
               acc[it] = true;
               return acc;
@@ -99,19 +87,6 @@ export default class Board {
               'sa': false,
               'su': false,
             }),
-            tags: new Set([
-              `homework`,
-              `theory`,
-              `practice`,
-              `intensive`,
-              `keks`,
-              `todo`,
-              `personal`,
-              `important`,
-              `cinema`,
-              `repeat`,
-              `entertaiment`,
-            ]),
           };
           this._tasks[this._tasks.findIndex((it) => it === taskMock)] = entry;
           document.removeEventListener(`keydown`, onEscKeyDown);
@@ -136,10 +111,44 @@ export default class Board {
   _sortByDateDown() {
     return this._tasks.slice().sort((a, b) => b.dueDate - a.dueDate);
   }
+
+  /** Удаляет из разметки кнопку подгрузки тасков
+     *
+     * @param {node} btnElement элемент кнопки
+     * @param {function} onLoadMore функция для слушетеля событий на кнопке
+     *
+     * @return {void}
+     */
+  _removeBtnLoadMore(btnElement, onLoadMore) {
+    btnElement.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
+    btnElement.removeEventListener(`click`, onLoadMore);
+  }
+
+  // Функция обработчик события клик на кнопке loadMoreBtn
+  _onLoadMoreTasks() {
+    const tasksContainer = document.querySelector(`.board__tasks`);
+    ++this._clickCounter;
+    const nextData = this._tasks.slice((this._clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * (this._clickCounter));
+    const buttonLoad = document.querySelector(`.load-more`);
+    if (Math.ceil(this._tasks.length / TASKS_AMOUNT_ON_PAGE) === this._clickCounter) {
+      this._removeBtnLoadMore(buttonLoad, this._onLoadMoreTasks);
+      makeTasks(nextData, this._сreateTask.bind(this), tasksContainer);
+      return;
+    }
+    makeTasks(nextData, this._сreateTask.bind(this), tasksContainer);
+  }
+
   // Метод отрисует отсортированные таски.
   _renderSortedTasks(sortedTasks, tasksBoard) {
-    sortedTasks.slice(0, TASKS_AMOUNT_ON_PAGE)
-    .forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock)));
+    if (sortedTasks.length > TASKS_AMOUNT_ON_PAGE) {
+      sortedTasks.slice(0, TASKS_AMOUNT_ON_PAGE)
+      .forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock)));
+      const btnLoad = document.querySelector(`.load-more`);
+      btnLoad.style.display = `block`;
+      btnLoad.addEventListener(`click`, this._onLoadMoreTasks);
+      return;
+    }
+    sortedTasks.forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock)));
   }
   // Функция слушатель события клик на элементах сортировки.
   _onSortLinkClick(evt) {
@@ -173,7 +182,7 @@ export default class Board {
     }
     const firstPartMockData = this._tasks.slice(0, TASKS_AMOUNT_ON_PAGE);
 
-    const sort = new Sort(getSorts());
+    const sort = new Sort();
     const fullBoard = new FullBoard(this._tasks, sort);
 
     render(main, fullBoard.getElement());
@@ -185,39 +194,14 @@ export default class Board {
     // Отрисовывает первую партию тасков на странице.
     makeTasks(firstPartMockData, this._сreateTask.bind(this), tasksContainer);
 
-    /** Удаляет из разметки кнопку подгрузки тасков
-     *
-     * @param {node} btnElement элемент кнопки
-     * @param {function} onLoadMore функция для слушетеля событий на кнопке
-     *
-     * @return {void}
-     */
-    const removeBtnLoadMore = (btnElement, onLoadMore) => {
-      btnElement.style.display = `none`; // скрыть кнопку после отрисовки последней партии тасков.
-      btnElement.removeEventListener(`click`, onLoadMore);
-    };
-
     const loadMoreBtn = document.querySelector(`.load-more`);
-    let clickCounter = 1;
 
-    // Функция обработчик события клик на кнопке loadMoreBtn
-    const onLoadMoreTasks = () => {
-      ++clickCounter;
-      const nextData = this._tasks.slice((clickCounter - 1) * TASKS_AMOUNT_ON_PAGE, TASKS_AMOUNT_ON_PAGE * (clickCounter));
-
-      if (Math.ceil(this._tasks.length / TASKS_AMOUNT_ON_PAGE) === clickCounter) {
-        removeBtnLoadMore(loadMoreBtn, onLoadMoreTasks);
-        makeTasks(nextData, this._сreateTask.bind(this), tasksContainer);
-        return;
-      }
-      makeTasks(nextData, this._сreateTask.bind(this), tasksContainer);
-    };
     const cardsAmount = document.querySelectorAll(`.card`);
     // Скрыть кнопку подгрузки тасков если их меньше чем должно быть на странице.
     if (this._tasks.length === cardsAmount.length || this._tasks.length <= TASKS_AMOUNT_ON_PAGE) {
-      removeBtnLoadMore(loadMoreBtn, onLoadMoreTasks);
+      this._removeBtnLoadMore(loadMoreBtn, this._onLoadMoreTasks);
     }
 
-    loadMoreBtn.addEventListener(`click`, onLoadMoreTasks);
+    loadMoreBtn.addEventListener(`click`, this._onLoadMoreTasks);
   }
 }

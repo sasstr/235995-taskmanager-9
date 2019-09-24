@@ -1,14 +1,14 @@
 import AbstractComponent from './abstract-component';
 
 export default class Card extends AbstractComponent {
-  constructor({description, dueDate, tagsList, repeatingDays, color}) {
+  constructor({description, dueDate, tags, repeatingDays, color}) {
     super();
 
     this._color = color;
     this._description = description;
     this._dueDate = dueDate;
     this._repeatingDays = repeatingDays;
-    this._tagsList = tagsList;
+    this._tags = tags;
   }
 
   getTemplate() {
@@ -53,10 +53,10 @@ export default class Card extends AbstractComponent {
 
           <div class="card__hashtag">
             <div class="card__hashtag-list">
-                  ${this._tagsList ? Array.from(this._tagsList).map((tag) => `<span class="card__hashtag-inner">
+                  ${Array.from(this._tags).map((tag) => `<span class="card__hashtag-inner">
                   <span class="card__hashtag-name">
                     #${tag}</span>
-                  </span>`.trim()).join(``) : ``}
+                  </span>`.trim()).join(``)}
             </div>
           </div>
         </div>
