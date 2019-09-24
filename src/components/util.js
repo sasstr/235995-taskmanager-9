@@ -29,7 +29,7 @@ const unrender = (element) => {
 };
 
 // Функция добавляет к элементу контейнеру элементы таски
-const makeTasks = (MockTasks, makeTask, elemContainer) => MockTasks.forEach((task) => elemContainer.append(makeTask(task)));
+const renderTasks = (MockTasks, makeTask, elemContainer) => MockTasks.forEach((task) => elemContainer.append(makeTask(task)));
 
 /** Функция возращает случайное логическое значение true или false.
  *  @return {boolean} логическое значение true или false.
@@ -79,7 +79,7 @@ export {
   getTagsArray,
   getRandomInteger,
   getRendomItemOfArray,
-  makeTasks,
+  renderTasks,
   render,
   randomBoolean,
   shuffleElemetsOfArray,

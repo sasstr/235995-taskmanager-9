@@ -10,8 +10,8 @@ import Menu from './components/menu';
 import Search from './components/search';
 import Filters from './components/filters';
 
-const MIN_TASKS_ON_PAGE = 0;
-const MAX_TASKS_ON_PAGE = 20;
+const MIN_TASKS_ON_PAGE = 7;
+const MAX_TASKS_ON_PAGE = 27;
 
 const tasksAmount = getRandomInteger(MIN_TASKS_ON_PAGE, MAX_TASKS_ON_PAGE);
 const tasksData = createTasksArray(getTaskData, tasksAmount);
@@ -29,5 +29,5 @@ render(main, search.getElement());
 render(main, filters.getElement());
 
 const tasksContainer = document.querySelector(`.board__tasks`);
-const boardController = new BoardController(tasksContainer, tasksData, tasksAmount);
+const boardController = new BoardController(tasksContainer, tasksData);
 boardController.init();

@@ -5,13 +5,16 @@ import {getColors} from '../components/data';
 import Card from '../components/card';
 import CardEdit from '../components/card-edit';
 
-export default class Task {
-  constructor(container, tasks, onDataChange, onChangeView) {
+const TASKS_AMOUNT_ON_PAGE = 8;
+
+export default class TaskController {
+  constructor(container, task, onDataChange, onChangeView) {
     this._container = container;
-    this._tasks = tasks;
+    this._task = task;
     this._colors = getColors();
     this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
+    this.create();
   }
 
   /* @TODOS
@@ -34,13 +37,19 @@ export default class Task {
    * @param {object} taskMock объект моковых данных таски
    * @return {node} возращает элемент таски
    */
-  _сreateTask(taskMock) {
-    const task = new Card(taskMock);
+  _сreate() {
+    /* flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), {
+      altInput: true,
+      allowInput: true,
+      defaultDate: this._data.dueDate,
+    }); */
+
+    const task = new Card(this._task);
 
     task.getElement()
       .querySelector(`.card__btn--edit`)
       .addEventListener(`click`, () => {
-        const taskEdit = new CardEdit(taskMock);
+        const taskEdit = new CardEdit(this._task);
         const onEscKeyDown = (evt) => {
           if (evt.key === `Escape` || evt.key === `Esc`) {
             taskEdit.getElement().parentNode.replaceChild(task.getElement(), taskEdit.getElement());
@@ -69,17 +78,10 @@ export default class Task {
           const formData = new FormData(taskEdit.getElement().querySelector(`.card__form`));
           const entry = {
             color: formData.get(`color`),
-            colors: [
-              `black`,
-              `blue`,
-              `yellow`,
-              `green`,
-              `pink`,
-            ],
             description: formData.get(`text`),
             dueDate: new Date(formData.get(`date`)),
-            tagsList: new Set(formData.getAll(`hashtag`)),
-            repeatingDays: formData.getAll(`repeats`).reduce((acc, it) => {
+            tags: new Set(formData.getAll(`hashtag`)),
+            repeatingDays: formData.getAll(`repeat`).reduce((acc, it) => {
               acc[it] = true;
               return acc;
             }, {
@@ -91,22 +93,11 @@ export default class Task {
               'sa': false,
               'su': false,
             }),
-            tags: new Set([
-              `homework`,
-              `theory`,
-              `practice`,
-              `intensive`,
-              `keks`,
-              `todo`,
-              `personal`,
-              `important`,
-              `cinema`,
-              `repeat`,
-              `entertaiment`,
-            ]),
           };
-          this._tasks[this._tasks.findIndex((it) => it === taskMock)] = entry;
 
+          this._onDataChange(entry, this._data);
+
+          /* this._tasks[this._tasks.findIndex((it) => it === taskMock)] = entry; */
           document.removeEventListener(`keydown`, onEscKeyDown);
 
           const cards = document.querySelectorAll(`.card`);
@@ -120,6 +111,12 @@ export default class Task {
       });
 
     return task.getElement();
+  }
+
+  setDefaultView() {
+    if (this._container.getElement().contains(this._taskEdit.getElement())) {
+      this._container.getElement().replaceChild(this._task.getElement(), this._taskEdit.getElement());
+    }
   }
 
   init() {

@@ -2,13 +2,14 @@ import AbstractComponent from './abstract-component';
 import {getColors} from '../components/data';
 
 export default class CardEdit extends AbstractComponent {
-  constructor({description, dueDate, repeatingDays, color, tags}) {
+  constructor({description, dueDate, repeatingDays, color, tags, favorite}) {
     super();
 
     this._color = color;
     this._colors = getColors();
     this._description = description;
     this._dueDate = dueDate;
+    this._favorite = favorite;
     this._repeatingDays = repeatingDays;
     this._tags = tags;
   }
@@ -102,7 +103,7 @@ export default class CardEdit extends AbstractComponent {
           </button>
           <button
             type="button"
-            class="card__btn card__btn--favorites card__btn--disabled"
+            class="card__btn card__btn--favorites ${this._favorite ? `` : `card__btn--disabled`}"
           >
             favorites
           </button>
@@ -162,5 +163,30 @@ export default class CardEdit extends AbstractComponent {
       </div>
     </form>
   </article>`.trim();
+  }
+
+  _subscribeOnEvents() {
+
+    this.getElement()
+      .querySelector(`.card__hashtag-input`).addEventListener(`keydown`, (evt) => {
+        if (evt.key === `Enter`) {
+          evt.preventDefault();
+          this.getElement().querySelector(`.card__hashtag-list`).insertAdjacentHTML(`beforeend`, `<span class="card__hashtag-inner">
+          <input
+            type="hidden"
+            name="hashtag"
+            value="${evt.target.value}"
+            class="card__hashtag-hidden-input"
+          />
+          <p class="card__hashtag-name">
+            #${evt.target.value}
+          </p>
+          <button type="button" class="card__hashtag-delete">
+            delete
+          </button>
+        </span>`);
+          evt.target.value = ``;
+        }
+      });
   }
 }
