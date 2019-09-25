@@ -37,7 +37,7 @@ export default class TaskController {
    * @param {object} taskMock объект моковых данных таски
    * @return {node} возращает элемент таски
    */
-  _сreate() {
+  сreate() {
     /* flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), {
       altInput: true,
       allowInput: true,
@@ -105,7 +105,7 @@ export default class TaskController {
 
           const newTasks = this._tasks.slice(0, TASKS_AMOUNT_ON_PAGE);
           const container = document.querySelector(`.board__tasks`);
-          newTasks.forEach((newCard) => render(container, this._сreateTask(newCard)));
+          newTasks.forEach((newCard) => render(container, this.сreate(newCard)));
         });
 
       });

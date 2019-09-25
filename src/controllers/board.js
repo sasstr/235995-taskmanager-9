@@ -18,23 +18,23 @@ export default class BoardController {
     this._onDataChange = this._onDataChange.bind(this);
     this._subscriptions = [];
     this._tasks = tasks;
-    this._sort = new Sort(this._tasks);
-    this._fullBoard = new FullBoard(this._tasks);
+    this._sort = new Sort();
+    this._fullBoard = (new FullBoard(this._tasks, this._sort)).getElement();
     this._tasksAmount = tasks.length;
   }
 
-  _renderBoard() {
-    unrender(this._fullBoard.getElement());
+  /* _renderBoard() {
+    unrender(this._fullBoard);
 
     this._fullBoard.removeElement();
     render(this._board.getElement(), this._fullBoard.getElement());
     this._tasks.forEach((taskMock) => this._renderTask(taskMock));
-  }
+  } */
 
   _onDataChange(newData, oldData) {
     this._tasks[this._tasks.findIndex((it2) => it2 === oldData)] = newData;
 
-    this._renderBoard(this._tasks); // _renderBoard не реализован!!!
+    /* this._renderBoard(this._tasks); */
   }
 
   _onChangeView() {
@@ -76,24 +76,24 @@ export default class BoardController {
     const buttonLoad = document.querySelector(`.load-more`);
     if (Math.ceil(this._tasks.length / TASKS_AMOUNT_ON_PAGE) === this._clickCounter) {
       this._removeBtnLoadMore(buttonLoad, this._onLoadMoreTasks);
-      renderTasks(nextData, this._сreateTask.bind(this), tasksContainer);
+      renderTasks(nextData, this._сreate.bind(this), tasksContainer);
       return;
     }
-    renderTasks(nextData, this._сreateTask.bind(this), tasksContainer);
+    renderTasks(nextData, this._сreate.bind(this), tasksContainer);
   }
 
   // Метод отрисует отсортированные таски.
   _renderSortedTasks(sortedTasks, tasksBoard) {
     if (sortedTasks.length > TASKS_AMOUNT_ON_PAGE) {
       sortedTasks.slice(0, TASKS_AMOUNT_ON_PAGE)
-      .forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock)));
+      .forEach((taskMock) => render(tasksBoard, this._makeTask(taskMock)));
 
       const btnLoad = document.querySelector(`.load-more`);
       btnLoad.style.display = `block`;
       btnLoad.addEventListener(`click`, this._onLoadMoreTasks);
       return;
     }
-    sortedTasks.forEach((taskMock) => render(tasksBoard, this._сreateTask(taskMock)));
+    sortedTasks.forEach((taskMock) => render(tasksBoard, this._сreate(taskMock)));
   }
   // Функция слушатель события клик на элементах сортировки.
   _onSortLinkClick(evt) {
@@ -131,13 +131,13 @@ export default class BoardController {
     const fullBoard = new FullBoard(this._tasks, sort);
 
     render(main, fullBoard.getElement());
-    const boardFilterList = document.querySelector(`.board__filter-list`);
+    const boardSortList = document.querySelector(`.board__filter-list`);
 
-    boardFilterList.addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
+    boardSortList.addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
     const tasksContainer = document.querySelector(`.board__tasks`);
 
     // Отрисовывает первую партию тасков на странице.
-    renderTasks(firstPartMockData, this._сreateTask, tasksContainer);
+    renderTasks(firstPartMockData, this._makeTask, tasksContainer);
 
     const loadMoreBtn = document.querySelector(`.load-more`);
 
