@@ -4,7 +4,8 @@ import {
   unrender} from '../components/util';
 import TaskController from '../controllers/task';
 import Sort from '../components/sort';
-import FullBoard from '../components/full-board';
+import Board from '../components/board';
+import TaskList from '../components/task-list';
 
 import NoTasks from '../components/no-tasks';
 
@@ -12,38 +13,38 @@ const TASKS_AMOUNT_ON_PAGE = 8;
 
 export default class BoardController {
   constructor(container, tasks) {
+    this._board = new Board();
     this._container = container;
     this._clickCounter = 1;
     this._onChangeView = this._onChangeView.bind(this);
     this._onDataChange = this._onDataChange.bind(this);
-    this._subscriptions = [];
-    this._tasks = tasks;
     this._sort = new Sort();
-    this._fullBoard = (new FullBoard(this._tasks, this._sort)).getElement();
-    this._tasksAmount = tasks.length;
+    this._subscriptions = [];
+    this._taskList = new TaskList();
+    this._tasks = tasks;
   }
 
-  /* _renderBoard() {
-    unrender(this._fullBoard);
+  _makeTask(task) {
+    const taskController = new TaskController(this._taskList.getElement(), task, this._onDataChange, this._onChangeView);
+    this._subscriptions.push(taskController.setDefaultView.bind(taskController));
+  }
 
-    this._fullBoard.removeElement();
-    render(this._board.getElement(), this._fullBoard.getElement());
-    this._tasks.forEach((taskMock) => this._renderTask(taskMock));
-  } */
+  _renderBoard() {
+    unrender(this._taskList);
+
+    this._taskList.removeElement();
+    render(this._board.getElement(), this._taskList);
+    this._tasks.forEach((taskMock) => this._makeTask(taskMock));
+  }
 
   _onDataChange(newData, oldData) {
     this._tasks[this._tasks.findIndex((it2) => it2 === oldData)] = newData;
 
-    /* this._renderBoard(this._tasks); */
+    this._renderBoard(this._tasks);
   }
 
   _onChangeView() {
     this._subscriptions.forEach((it) => it());
-  }
-
-  _makeTask(task) {
-    const taskController = new TaskController(this._fullBoard, task, this._onDataChange, this._onChangeView);
-    this._subscriptions.push(taskController.setDefaultView.bind(taskController));
   }
 
   // Сортирует задачи по дате от самой ранней к самой поздней.
@@ -125,25 +126,20 @@ export default class BoardController {
       render(main, noTasks.getElement());
       return;
     }
-    const firstPartMockData = this._tasks.slice(0, TASKS_AMOUNT_ON_PAGE);
+    const firstPartTasks = this._tasks.slice(0, TASKS_AMOUNT_ON_PAGE);
 
-    const sort = new Sort();
-    const fullBoard = new FullBoard(this._tasks, sort);
+    render(main, this._taskList);
 
-    render(main, fullBoard.getElement());
-    const boardSortList = document.querySelector(`.board__filter-list`);
-
-    boardSortList.addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
-    const tasksContainer = document.querySelector(`.board__tasks`);
+    this._sort.getElement().addEventListener(`click`, (evt) => this._onSortLinkClick(evt));
 
     // Отрисовывает первую партию тасков на странице.
-    renderTasks(firstPartMockData, this._makeTask, tasksContainer);
+    renderTasks(firstPartTasks, this._makeTask, this._board).bind(this);
 
     const loadMoreBtn = document.querySelector(`.load-more`);
 
-    const cardsAmount = document.querySelectorAll(`.card`);
+    const cardsAmount = (document.querySelectorAll(`.card`)).length;
     // Скрыть кнопку подгрузки тасков если их меньше чем должно быть на странице.
-    if (this._tasks.length === cardsAmount.length || this._tasks.length <= TASKS_AMOUNT_ON_PAGE) {
+    if (this._tasks.length === cardsAmount || this._tasks.length <= TASKS_AMOUNT_ON_PAGE) {
       this._removeBtnLoadMore(loadMoreBtn, this._onLoadMoreTasks);
     }
 

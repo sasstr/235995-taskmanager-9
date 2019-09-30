@@ -1,9 +1,11 @@
 import {
   render,
   unrender} from '../components/util';
-import {getColors} from '../components/data';
 import Card from '../components/card';
 import CardEdit from '../components/card-edit';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/light.css';
 
 const TASKS_AMOUNT_ON_PAGE = 8;
 
@@ -11,9 +13,11 @@ export default class TaskController {
   constructor(container, task, onDataChange, onChangeView) {
     this._container = container;
     this._task = task;
-    this._colors = getColors();
     this._onChangeView = onChangeView;
     this._onDataChange = onDataChange;
+    this._taskView = new Card(task);
+    this._taskEdit = new CardEdit(task);
+
     this.create();
   }
 
@@ -38,44 +42,41 @@ export default class TaskController {
    * @return {node} возращает элемент таски
    */
   сreate() {
-    /* flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), {
+    flatpickr(this._taskEdit.getElement().querySelector(`.card__date`), {
       altInput: true,
       allowInput: true,
-      defaultDate: this._data.dueDate,
-    }); */
+      defaultDate: this._task.dueDate,
+    });
 
-    const task = new Card(this._task);
-
-    task.getElement()
+    this._taskView.getElement()
       .querySelector(`.card__btn--edit`)
       .addEventListener(`click`, () => {
-        const taskEdit = new CardEdit(this._task);
         const onEscKeyDown = (evt) => {
           if (evt.key === `Escape` || evt.key === `Esc`) {
-            taskEdit.getElement().parentNode.replaceChild(task.getElement(), taskEdit.getElement());
+            this._taskEdit.getElement().parentNode.replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
             document.removeEventListener(`keydown`, onEscKeyDown);
           }
         };
 
-        task.getElement().parentNode.replaceChild(taskEdit.getElement(), task.getElement());
+        this._taskView.getElement().parentNode.replaceChild(this._taskEdit.getElement(), this._taskView.getElement());
         document.addEventListener(`keydown`, onEscKeyDown);
 
-        taskEdit.getElement().querySelector(`textarea`)
+        this._taskEdit.getElement().querySelector(`textarea`)
         .addEventListener(`focus`, () => {
           document.removeEventListener(`keydown`, onEscKeyDown);
         });
 
-        taskEdit.getElement().querySelector(`textarea`)
+        this._taskEdit.getElement().querySelector(`textarea`)
         .addEventListener(`blur`, () => {
           document.addEventListener(`keydown`, onEscKeyDown);
         });
 
-        taskEdit.getElement()
+        this._taskEdit.getElement()
         .querySelector(`.card__save`)
         .addEventListener(`click`, (evtEdit) => {
           evtEdit.preventDefault();
 
-          const formData = new FormData(taskEdit.getElement().querySelector(`.card__form`));
+          const formData = new FormData(this._taskEdit.getElement().querySelector(`.card__form`));
           const entry = {
             color: formData.get(`color`),
             description: formData.get(`text`),
@@ -95,9 +96,8 @@ export default class TaskController {
             }),
           };
 
-          this._onDataChange(entry, this._data);
+          this._onDataChange(entry, this._task);
 
-          /* this._tasks[this._tasks.findIndex((it) => it === taskMock)] = entry; */
           document.removeEventListener(`keydown`, onEscKeyDown);
 
           const cards = document.querySelectorAll(`.card`);
@@ -110,12 +110,12 @@ export default class TaskController {
 
       });
 
-    return task.getElement();
+    return this._task.getElement();
   }
 
   setDefaultView() {
     if (this._container.getElement().contains(this._taskEdit.getElement())) {
-      this._container.getElement().replaceChild(this._task.getElement(), this._taskEdit.getElement());
+      this._container.getElement().replaceChild(this._taskView.getElement(), this._taskEdit.getElement());
     }
   }
 

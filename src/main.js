@@ -23,8 +23,9 @@ const filters = new Filters(getfilterData(amountFilters));
 
 const main = document.querySelector(`.main`);
 const mainControl = main.querySelector(`.main__control`);
-
 render(mainControl, menu.getElement());
+
+
 render(main, search.getElement());
 render(main, filters.getElement());
 
